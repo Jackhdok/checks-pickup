@@ -1,0 +1,243 @@
+.checkin-form {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #333;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.checkin-form.light-mode {
+  background-color: #ffffff;
+  border-color: #e9ecef;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.checkin-form.light-mode .form-header h2 {
+  color: #1a1a1a;
+}
+
+.form-header p {
+  color: #888;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.checkin-form.light-mode .form-header p {
+  color: #666;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.checkin-form.light-mode .form-label {
+  color: #1a1a1a;
+}
+
+.form-input {
+  padding: 0.875rem 1rem;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background-color: #0f0f0f;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.checkin-form.light-mode .form-input {
+  background-color: #ffffff;
+  color: #1a1a1a;
+  border-color: #ddd;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input.error {
+  border-color: #ef4444;
+}
+
+.form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background-color: #0f0f0f;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.checkin-form.light-mode .radio-option {
+  background-color: #ffffff;
+  border-color: #ddd;
+}
+
+.radio-option:hover {
+  border-color: #3b82f6;
+  background-color: #1e293b;
+}
+
+.checkin-form.light-mode .radio-option:hover {
+  background-color: #f8f9fa;
+}
+
+.radio-option input[type="radio"] {
+  margin: 0;
+  accent-color: #3b82f6;
+}
+
+.radio-option input[type="radio"]:checked + .radio-label {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.radio-label {
+  font-weight: 500;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.checkin-form.light-mode .radio-label {
+  color: #1a1a1a;
+}
+
+.purpose-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background-color: #0f0f0f;
+  border: 2px solid #333;
+  border-radius: 8px;
+  color: #10b981;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.checkin-form.light-mode .purpose-display {
+  background-color: #ffffff;
+  border-color: #ddd;
+  color: #059669;
+}
+
+.submit-button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submit-button.submitting {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #10b981;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 1rem;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .checkin-form {
+    padding: 1.5rem;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+  }
+  
+  .submit-button {
+    padding: 0.875rem 1.5rem;
+  }
+}
+

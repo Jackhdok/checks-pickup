@@ -1,0 +1,136 @@
+.public-checkin {
+  min-height: 100vh;
+  background-color: #0f0f0f;
+  color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.public-checkin.light-mode {
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+.public-header {
+  background-color: #1a1a1a;
+  padding: 1rem 0;
+  border-bottom: 1px solid #333;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.public-checkin.light-mode .public-header {
+  background-color: #f8f9fa;
+  border-bottom-color: #e9ecef;
+}
+
+.public-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.public-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.public-title-section h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.public-checkin.light-mode .public-title-section h1 {
+  color: #1a1a1a;
+}
+
+.public-title-section p {
+  color: #888;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.public-checkin.light-mode .public-title-section p {
+  color: #666;
+}
+
+.call-notification {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  padding: 1rem 0;
+  text-align: center;
+  animation: slideDown 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.call-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.call-content p {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.public-main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.public-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .public-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .public-header-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .public-title-section {
+    align-items: center;
+  }
+  
+  .public-title-section h1 {
+    font-size: 1.5rem;
+  }
+  
+  .call-content h3 {
+    font-size: 1.25rem;
+  }
+  
+  .call-content p {
+    font-size: 0.875rem;
+  }
+}
