@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import AdminPage from './components/AdminPage';
 import PublicCheckIn from './components/PublicCheckIn';
-import sendSMSNotification from './services/smsWebhook';
 import './App.css';
 
 function App() {
@@ -38,13 +37,7 @@ function App() {
       setCalledClient(client);
       updateClientStatus(id, 'called');
       
-      // Send SMS notification to the client
-      try {
-        await sendSMSNotification(client);
-      } catch (error) {
-        console.error('Error sending SMS notification:', error);
-        // Continue even if SMS fails
-      }
+      // Client called - notification handled by UI
       
       // Show call notification for 5 seconds
       setTimeout(() => {

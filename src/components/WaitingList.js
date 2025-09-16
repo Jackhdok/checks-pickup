@@ -1,6 +1,5 @@
 import React from 'react';
 import { Clock, User, Phone, Building2, Package, CheckCircle, X } from 'lucide-react';
-import sendSMSNotification from '../services/smsWebhook';
 import './WaitingList.css';
 
 const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPublicView = false }) => {
@@ -10,14 +9,7 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
       // Update status to in-progress (ready to pick up check)
       onUpdateStatus(clientId, 'in-progress');
       
-      // Send SMS notification to the client
-      try {
-        await sendSMSNotification(client);
-        console.log('SMS notification sent to', client.name);
-      } catch (error) {
-        console.error('Error sending SMS notification:', error);
-        // Continue even if SMS fails
-      }
+      // Client ready for pickup - notification handled by UI
     }
   };
   const getStatusColor = (status) => {
