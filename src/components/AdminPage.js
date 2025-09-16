@@ -15,13 +15,13 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'waiting':
+      case 'WAITING':
         return '#f59e0b';
-      case 'called':
+      case 'CALLED':
         return '#8b5cf6';
-      case 'in-progress':
+      case 'IN_PROGRESS':
         return '#3b82f6';
-      case 'completed':
+      case 'COMPLETED':
         return '#10b981';
       default:
         return '#6b7280';
@@ -30,13 +30,13 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'waiting':
+      case 'WAITING':
         return <Clock size={16} />;
-      case 'called':
+      case 'CALLED':
         return <Megaphone size={16} />;
-      case 'in-progress':
+      case 'IN_PROGRESS':
         return <CheckCircle size={16} />;
-      case 'completed':
+      case 'COMPLETED':
         return <CheckCircle size={16} />;
       default:
         return <Clock size={16} />;
@@ -80,10 +80,10 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
 
   const getStatusCounts = () => {
     return {
-      waiting: waitingList.filter(c => c.status === 'waiting').length,
-      called: waitingList.filter(c => c.status === 'called').length,
-      inProgress: waitingList.filter(c => c.status === 'in-progress').length,
-      completed: waitingList.filter(c => c.status === 'completed').length,
+      waiting: waitingList.filter(c => c.status === 'WAITING').length,
+      called: waitingList.filter(c => c.status === 'CALLED').length,
+      inProgress: waitingList.filter(c => c.status === 'IN_PROGRESS').length,
+      completed: waitingList.filter(c => c.status === 'COMPLETED').length,
       total: waitingList.length
     };
   };
@@ -251,7 +251,7 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
                   </div>
                   
                   <div className="admin-actions">
-                    {client.status === 'waiting' && (
+                    {client.status === 'WAITING' && (
                       <button
                         className="admin-action-btn call"
                         onClick={() => handleCallClient(client.id)}
@@ -261,7 +261,7 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
                       </button>
                     )}
                     
-                    {client.status === 'called' && (
+                    {client.status === 'CALLED' && (
                       <button
                         className="admin-action-btn in-progress"
                         onClick={() => handleStartService(client.id)}
@@ -271,7 +271,7 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
                       </button>
                     )}
                     
-                    {client.status === 'in-progress' && (
+                    {client.status === 'IN_PROGRESS' && (
                       <button
                         className="admin-action-btn complete"
                         onClick={() => handleCompleteClient(client.id)}
@@ -281,7 +281,7 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
                       </button>
                     )}
                     
-                    {client.status === 'completed' && (
+                    {client.status === 'COMPLETED' && (
                       <div className="completed-message">
                         <CheckCircle size={16} />
                         <span>Service Completed</span>

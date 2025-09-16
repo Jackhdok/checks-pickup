@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String
+  type        ClientType
+  status      ClientStatus @default(WAITING)
+  checkInTime DateTime @default(now())
+  calledTime  DateTime?
+  completedTime DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("clients")
+}
+
+enum ClientType {
+  VENDOR
+  SUBVENDOR
+}
+
+enum ClientStatus {
+  WAITING
+  CALLED
+  IN_PROGRESS
+  COMPLETED
+}

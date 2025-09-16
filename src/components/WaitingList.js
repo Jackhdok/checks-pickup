@@ -14,11 +14,11 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
   };
   const getStatusColor = (status) => {
     switch (status) {
-      case 'waiting':
+      case 'WAITING':
         return '#f59e0b';
-      case 'in-progress':
+      case 'IN_PROGRESS':
         return '#3b82f6';
-      case 'completed':
+      case 'COMPLETED':
         return '#10b981';
       default:
         return '#6b7280';
@@ -27,11 +27,11 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'waiting':
+      case 'WAITING':
         return <Clock size={16} />;
-      case 'in-progress':
+      case 'IN_PROGRESS':
         return <CheckCircle size={16} />;
-      case 'completed':
+      case 'COMPLETED':
         return <CheckCircle size={16} />;
       default:
         return <Clock size={16} />;
@@ -132,7 +132,7 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
               </div>
             </div>
             
-            {!isPublicView && client.status === 'waiting' && (
+            {!isPublicView && client.status === 'WAITING' && (
               <div className="status-actions">
                 <button
                   className="status-button in-progress"
@@ -143,7 +143,7 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
               </div>
             )}
             
-            {!isPublicView && client.status === 'in-progress' && (
+            {!isPublicView && client.status === 'IN_PROGRESS' && (
               <div className="status-actions">
                 <button
                   className="status-button completed"
