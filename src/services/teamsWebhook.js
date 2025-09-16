@@ -5,8 +5,8 @@ const sendTeamsNotification = async (clientData) => {
   const webhookUrl = process.env.REACT_APP_TEAMS_WEBHOOK_URL;
   
   if (!webhookUrl) {
-    console.warn('Power Automate webhook URL not configured. Skipping notification.');
-    return;
+    console.warn('Power Automate webhook URL not configured. Please add REACT_APP_TEAMS_WEBHOOK_URL to your .env file. Skipping notification.');
+    return Promise.resolve(); // Return resolved promise to prevent unhandled rejection
   }
 
   const message = {

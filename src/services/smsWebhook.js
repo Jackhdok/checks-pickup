@@ -8,8 +8,8 @@ const sendSMSNotification = async (clientData) => {
   const messagingServiceSid = process.env.REACT_APP_TWILIO_MESSAGING_SERVICE_SID;
   
   if (!twilioToken || !twilioAccountSid) {
-    console.warn('Twilio configuration not complete. Skipping SMS notification.');
-    return;
+    console.warn('Twilio configuration not complete. Please add REACT_APP_TWILIO_AUTH_TOKEN and REACT_APP_TWILIO_ACCOUNT_SID to your .env file. Skipping SMS notification.');
+    return Promise.resolve(); // Return resolved promise to prevent unhandled rejection
   }
 
   // Clean phone number (remove spaces, dashes, etc.)
