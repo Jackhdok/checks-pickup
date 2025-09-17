@@ -2,3 +2,5 @@ node_modules
 .vercel
 
 /src/generated/prisma
+
+.env*.local
