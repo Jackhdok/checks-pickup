@@ -1,17 +1,25 @@
 // Database service for client operations
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://checks-pickup-h2ge7qrf9-jack-hds-projects.vercel.app/api'
+  ? 'https://checks-pickup-ohn1x0d0t-jack-hds-projects.vercel.app/api'
   : 'http://localhost:3000/api';
 
 class DatabaseService {
   // Get all clients
   static async getClients() {
     try {
+      console.log('Fetching clients from:', `${API_BASE_URL}/clients`);
       const response = await fetch(`${API_BASE_URL}/clients`);
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('API Error:', errorText);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
       }
-      return await response.json();
+      
+      const data = await response.json();
+      console.log('Fetched clients:', data);
+      return data;
     } catch (error) {
       console.error('Error fetching clients:', error);
       return [];
