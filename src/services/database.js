@@ -1,6 +1,6 @@
 // Database service for client operations
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://checks-pickup-ohn1x0d0t-jack-hds-projects.vercel.app/api'
+  ? 'https://checks-pickup-aqw5jbyor-jack-hds-projects.vercel.app/api'
   : 'http://localhost:3000/api';
 
 class DatabaseService {
