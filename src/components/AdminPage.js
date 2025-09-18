@@ -5,7 +5,7 @@ import './AdminPage.css';
 const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLightMode, onBackToPublic, onOpenPublicCheckIn, onLogout }) => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('clients');
+  // Removed unused tab state since we simplified to single view
 
   const filteredList = waitingList.filter(client => {
     const matchesStatus = filterStatus === 'all' || client.status === filterStatus;
