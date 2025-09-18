@@ -3,15 +3,12 @@
 
 const sendTeamsNotification = async (clientData) => {
   try {
-    // Validate webhook URL configuration
-    const webhookUrl = process.env.REACT_APP_TEAMS_WEBHOOK_URL;
+    console.log('🔔 Sending Teams notification for:', clientData);
     
-    if (!webhookUrl) {
-      console.warn('⚠️  Teams webhook URL not configured. Missing environment variable:');
-      console.warn('   - REACT_APP_TEAMS_WEBHOOK_URL');
-      console.warn('   Add this to your .env file to enable Teams notifications. Service will continue without Teams notifications.');
-      return Promise.resolve(); // Return resolved promise to prevent unhandled rejection
-    }
+    // Use the hardcoded webhook URL
+    const webhookUrl = 'https://default615878b3a96f4a16bf757f30b157ce.5a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4eba1566011241f3affa750bf6407657/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7PrTXGMC7pvRgZU34ALou31pEklvPnrlHteE5HHx0Wk';
+    
+    console.log('🔗 Webhook URL:', webhookUrl);
 
     // Validate webhook URL format
     try {
@@ -73,7 +70,7 @@ const sendTeamsNotification = async (clientData) => {
                   },
                   {
                     "title": "Type",
-                    "value": clientData.type === 'vendor' ? 'Vendor' : 'Subvendor'
+                    "value": clientData.type === 'vendor' ? 'Vendor' : 'Subcontractor'
                   },
                   {
                     "title": "Manager",
@@ -95,6 +92,11 @@ const sendTeamsNotification = async (clientData) => {
                 "type": "Action.OpenUrl",
                 "title": "View Admin Dashboard",
                 "url": "https://checks-pickup.vercel.app/admin"
+              },
+              {
+                "type": "Action.OpenUrl",
+                "title": "Open Check-in Page",
+                "url": "https://checks-pickup.vercel.app/check-in"
               }
             ]
           }
@@ -110,6 +112,9 @@ const sendTeamsNotification = async (clientData) => {
       body: JSON.stringify(message)
     });
 
+    console.log('📡 Webhook response status:', response.status);
+    console.log('📡 Webhook response status text:', response.statusText);
+    
     if (response.ok) {
       console.log('✅ Teams notification sent successfully');
       return Promise.resolve();

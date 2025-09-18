@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "react-router-dom": "^6.26.2",
     "@prisma/client": "^6.16.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "lucide-react": "^0.263.1",
+    "node-fetch": "^3.3.2",
     "prisma": "^6.16.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -20,6 +23,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "server": "node server-simple.js",
+    "dev": "npm run build && npm run server",
     "vercel-build": "prisma generate && node scripts/migrate.js && react-scripts build",
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
@@ -44,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

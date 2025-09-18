@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         data: {
           name,
           phone,
-          type: type.toUpperCase(),
+          type: type.toLowerCase() === 'subcontractor' ? 'SUBCONTRACTOR' : 'VENDOR',
           manager,
           purpose,
           status: 'WAITING'

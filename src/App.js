@@ -118,7 +118,7 @@ function App({ initialView = 'public' }) {
     try {
       const newClient = await DatabaseService.createClient({
         ...clientData,
-        type: clientData.type === 'subcontractor' ? 'SUBCONTRACTOR' : clientData.type.toUpperCase()
+        type: clientData.type === 'subcontractor' ? 'subcontractor' : clientData.type
       });
       setWaitingList(prev => [...prev, newClient]);
     } catch (error) {

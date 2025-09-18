@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { User, Phone, Building2, Package, CheckCircle } from 'lucide-react';
-import sendTeamsNotification from '../services/teamsWebhook';
 import './CheckInForm.css';
 
 const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
@@ -66,10 +65,7 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
     setIsSubmitting(true);
     
     try {
-      // Send Teams notification
-      await sendTeamsNotification(formData);
-      
-      // Add to waiting list
+      // Add to waiting list (Teams notification will be sent by the API)
       onAddToWaitingList(formData);
       
       // Reset form
@@ -161,12 +157,12 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
               <input
                 type="radio"
                 name="type"
-                value="subvendor"
-                checked={formData.type === 'subvendor'}
+                value="subcontractor"
+                checked={formData.type === 'subcontractor'}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
               />
-              <span className="radio-label">Subvendor</span>
+              <span className="radio-label">Subcontractor</span>
             </label>
           </div>
           {errors.type && <span className="error-message">{errors.type}</span>}

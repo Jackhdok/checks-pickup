@@ -103,7 +103,7 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
                   <Building2 size={14} />
                   <span className="detail-label">Type:</span>
                   <span className={`detail-value type-${client.type}`}>
-                    {client.type === 'vendor' ? 'Vendor' : 'Subvendor'}
+                    {client.type === 'VENDOR' ? 'Vendor' : 'Subcontractor'}
                   </span>
                 </div>
                 
@@ -134,7 +134,7 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
                   style={{ backgroundColor: getStatusColor(client.status) }}
                 >
                   {getStatusIcon(client.status)}
-                  <span>{client.status.replace('-', ' ')}</span>
+                  <span>{client.status === 'IN_PROGRESS' ? 'PLEASE COME TO ACCOUNTING ROOM' : client.status.replace('-', ' ')}</span>
                 </div>
                 <span className="queue-position">#{index + 1}</span>
               </div>

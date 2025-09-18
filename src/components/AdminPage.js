@@ -226,7 +226,7 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
                         <Building2 size={14} />
                         <span className="detail-label">Type:</span>
                         <span className={`detail-value type-${client.type}`}>
-                          {client.type === 'vendor' ? 'Vendor' : 'Subvendor'}
+                          {client.type === 'VENDOR' ? 'Vendor' : 'Subcontractor'}
                         </span>
                       </div>
                       
