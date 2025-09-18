@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminPage from './components/AdminPage';
 import PublicCheckIn from './components/PublicCheckIn';
 import DatabaseService from './services/database';
 import './App.css';
 
 function App({ initialView = 'public' }) {
+  const navigate = useNavigate();
   const [waitingList, setWaitingList] = useState([]);
   const [isLightMode, setIsLightMode] = useState(false);
-  const [currentView] = useState(initialView); // 'admin' or 'public'
+  const [currentView, setCurrentView] = useState(initialView); // 'admin' or 'public'
   const [calledClient, setCalledClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const lastStatusesRef = useRef({});
+
+  // Update currentView when initialView prop changes
+  useEffect(() => {
+    setCurrentView(initialView);
+  }, [initialView]);
 
   // Load and poll clients
   useEffect(() => {
@@ -99,16 +106,12 @@ function App({ initialView = 'public' }) {
   const updateClientStatus = async (id, status) => {
     try {
       const normalized = normalizeStatus(status);
-      console.log('App: Updating client status:', { id, status, normalized });
       const updatedClient = await DatabaseService.updateClientStatus(id, normalized);
-      console.log('App: Received updated client:', updatedClient);
-      setWaitingList(prev => {
-        const newList = prev.map(client => 
+      setWaitingList(prev => 
+        prev.map(client => 
           client.id === id ? updatedClient : client
-        );
-        console.log('App: Updated waiting list:', newList);
-        return newList;
-      });
+        )
+      );
     } catch (error) {
       console.error('Error updating client status:', error);
       // Fallback to local state if database fails
@@ -160,8 +163,8 @@ function App({ initialView = 'public' }) {
           onUpdateStatus={updateClientStatus}
           onCallClient={callClient}
           isLightMode={isLightMode}
-          onBackToPublic={() => (window.location.href = '/check-in')}
-          onOpenPublicCheckIn={() => (window.location.href = '/check-in')}
+          onBackToPublic={() => navigate('/check-in')}
+          onOpenPublicCheckIn={() => navigate('/check-in')}
         />
       </div>
     );

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 import CheckInForm from './CheckInForm';
 import PublicWaitingList from './PublicWaitingList';
 import ThemeToggle from './ThemeToggle';
@@ -11,6 +13,7 @@ const PublicCheckIn = ({
   setIsLightMode, 
   calledClient 
 }) => {
+  const navigate = useNavigate();
 
   return (
     <div className={`public-checkin ${isLightMode ? 'light-mode' : ''}`}>
@@ -20,7 +23,17 @@ const PublicCheckIn = ({
             <h1>Check-in Waiting List</h1>
             <p>Please check in to join the waiting list</p>
           </div>
-          <ThemeToggle isLightMode={isLightMode} setIsLightMode={setIsLightMode} />
+          <div className="public-header-actions">
+            <button 
+              className="admin-button" 
+              onClick={() => navigate('/admin')}
+              title="Go to Admin Dashboard"
+            >
+              <Settings size={20} />
+              <span>Admin</span>
+            </button>
+            <ThemeToggle isLightMode={isLightMode} setIsLightMode={setIsLightMode} />
+          </div>
         </div>
       </header>
       
