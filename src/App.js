@@ -7,7 +7,7 @@ import './App.css';
 function App({ initialView = 'public' }) {
   const [waitingList, setWaitingList] = useState([]);
   const [isLightMode, setIsLightMode] = useState(false);
-  const [currentView, setCurrentView] = useState(initialView); // 'admin' or 'public'
+  const [currentView] = useState(initialView); // 'admin' or 'public'
   const [calledClient, setCalledClient] = useState(null);
   const [loading, setLoading] = useState(true);
 
