@@ -27,10 +27,10 @@ export default async function handler(req, res) {
       res.status(200).json(clients);
     } else if (req.method === 'POST') {
       // Create new client
-      const { name, phone, type } = req.body;
+      const { name, phone, type, manager } = req.body;
       
-      if (!name || !phone || !type) {
-        return res.status(400).json({ error: 'Missing required fields: name, phone, type' });
+      if (!name || !phone || !type || !manager) {
+        return res.status(400).json({ error: 'Missing required fields: name, phone, type, manager' });
       }
 
       const client = await prisma.client.create({
@@ -38,6 +38,7 @@ export default async function handler(req, res) {
           name,
           phone,
           type: type.toUpperCase(),
+          manager,
           status: 'WAITING'
         }
       });
