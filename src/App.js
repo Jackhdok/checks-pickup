@@ -13,12 +13,43 @@ function App({ initialView = 'public' }) {
   const [calledClient, setCalledClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [pinCode, setPinCode] = useState('');
+  const [pinError, setPinError] = useState('');
   const lastStatusesRef = useRef({});
 
   // Update currentView when initialView prop changes
   useEffect(() => {
     setCurrentView(initialView);
   }, [initialView]);
+
+  // Check if user is already authenticated for admin
+  useEffect(() => {
+    if (currentView === 'admin') {
+      const authStatus = localStorage.getItem('admin_authenticated');
+      if (authStatus === 'true') {
+        setIsAuthenticated(true);
+      }
+    }
+  }, [currentView]);
+
+  const handlePinSubmit = (e) => {
+    e.preventDefault();
+    if (pinCode === '12952') {
+      setIsAuthenticated(true);
+      localStorage.setItem('admin_authenticated', 'true');
+      setPinError('');
+    } else {
+      setPinError('Invalid PIN code');
+      setPinCode('');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('admin_authenticated');
+    navigate('/check-in');
+  };
 
   // Load and poll clients
   useEffect(() => {
@@ -160,6 +191,45 @@ function App({ initialView = 'public' }) {
   }
 
   if (currentView === 'admin') {
+    // Show PIN authentication if not authenticated
+    if (!isAuthenticated) {
+      return (
+        <div className={`pin-auth-container ${isLightMode ? 'light-mode' : ''}`}>
+          <div className="pin-auth-card">
+            <div className="pin-auth-header">
+              <h1>Admin Access</h1>
+              <p>Enter PIN code to access admin dashboard</p>
+            </div>
+            <form onSubmit={handlePinSubmit} className="pin-auth-form">
+              <div className="pin-input-group">
+                <input
+                  type="password"
+                  value={pinCode}
+                  onChange={(e) => setPinCode(e.target.value)}
+                  placeholder="Enter PIN code"
+                  className="pin-input"
+                  maxLength="5"
+                />
+                {pinError && <div className="pin-error">{pinError}</div>}
+              </div>
+              <button type="submit" className="pin-submit-btn">
+                Access Admin
+              </button>
+            </form>
+            <div className="pin-auth-footer">
+              <button 
+                onClick={() => navigate('/check-in')} 
+                className="back-to-public-btn"
+              >
+                ← Back to Check-in
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show admin dashboard if authenticated
     return (
       <div>
         {refreshing && (
@@ -176,6 +246,7 @@ function App({ initialView = 'public' }) {
           isLightMode={isLightMode}
           onBackToPublic={() => navigate('/check-in')}
           onOpenPublicCheckIn={() => navigate('/check-in')}
+          onLogout={handleLogout}
         />
       </div>
     );

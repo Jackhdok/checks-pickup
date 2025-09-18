@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Users, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, User, Monitor } from 'lucide-react';
 import './AdminPage.css';
 
-const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLightMode, onBackToPublic, onOpenPublicCheckIn }) => {
+const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLightMode, onBackToPublic, onOpenPublicCheckIn, onLogout }) => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -102,6 +102,10 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
             <button className="public-checkin-button" onClick={onOpenPublicCheckIn}>
               <Monitor size={20} />
               <span>Open Check-in Page</span>
+            </button>
+            <button className="logout-button" onClick={onLogout}>
+              <X size={20} />
+              <span>Logout</span>
             </button>
           </div>
         </div>

@@ -214,3 +214,178 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
+/* PIN Authentication Styles */
+.pin-auth-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.pin-auth-container.light-mode {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.pin-auth-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.pin-auth-container.light-mode .pin-auth-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.pin-auth-header h1 {
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.pin-auth-container.light-mode .pin-auth-header h1 {
+  color: #1a1a1a;
+}
+
+.pin-auth-header p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pin-auth-container.light-mode .pin-auth-header p {
+  color: #666;
+}
+
+.pin-auth-form {
+  margin-bottom: 2rem;
+}
+
+.pin-input-group {
+  margin-bottom: 1rem;
+}
+
+.pin-input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 0.2em;
+  transition: all 0.3s ease;
+}
+
+.pin-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pin-auth-container.light-mode .pin-input {
+  background: rgba(255, 255, 255, 0.8);
+  color: #1a1a1a;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.pin-auth-container.light-mode .pin-input::placeholder {
+  color: #999;
+}
+
+.pin-input:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.pin-auth-container.light-mode .pin-input:focus {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.pin-error {
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.pin-submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pin-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+}
+
+.pin-auth-footer {
+  margin-top: 1rem;
+}
+
+.back-to-public-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.back-to-public-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.pin-auth-container.light-mode .back-to-public-btn {
+  color: #666;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.pin-auth-container.light-mode .back-to-public-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a1a1a;
+}
+
+/* Logout Button Styles */
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #dc2626;
+  border: 1px solid #b91c1c;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.logout-button:hover {
+  background-color: #b91c1c;
+  border-color: #991b1b;
+  transform: translateY(-1px);
+}
