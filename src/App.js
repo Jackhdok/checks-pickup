@@ -23,8 +23,11 @@ function App({ initialView = 'public' }) {
   // Load and poll clients
   useEffect(() => {
     let isMounted = true;
+    console.log('App: Setting up auto-refresh for view:', currentView);
+    
     const fetchClients = async (isBackground = false) => {
       try {
+        console.log('App: Fetching clients, background:', isBackground);
         if (!isBackground) {
           setLoading(true);
         } else {
@@ -32,6 +35,7 @@ function App({ initialView = 'public' }) {
         }
         const clients = await DatabaseService.getClients();
         if (!isMounted) return;
+        console.log('App: Received clients:', clients.length);
         setWaitingList(clients);
         // Detect newly ready (IN_PROGRESS) clients for public notification
         const prev = lastStatusesRef.current;
@@ -39,6 +43,7 @@ function App({ initialView = 'public' }) {
         clients.forEach(c => { statusMap[c.id] = c.status; });
         const newlyReady = clients.find(c => c.status === 'IN_PROGRESS' && prev[c.id] && prev[c.id] !== 'IN_PROGRESS');
         if (newlyReady) {
+          console.log('App: Newly ready client:', newlyReady);
           setCalledClient(newlyReady);
           setTimeout(() => setCalledClient(null), 5000);
         }
@@ -55,12 +60,18 @@ function App({ initialView = 'public' }) {
     };
 
     fetchClients();
-    const intervalId = setInterval(() => fetchClients(true), 5000);
+    console.log('App: Setting up 5-second interval');
+    const intervalId = setInterval(() => {
+      console.log('App: Auto-refresh triggered');
+      fetchClients(true);
+    }, 5000);
+    
     return () => {
+      console.log('App: Cleaning up auto-refresh');
       isMounted = false;
       clearInterval(intervalId);
     };
-  }, []); // Remove initialView dependency to ensure it runs on every mount
+  }, [currentView]); // Add currentView dependency to restart when view changes
 
   const normalizeStatus = (status) => {
     switch ((status || '').toLowerCase()) {
