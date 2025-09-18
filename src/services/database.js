@@ -52,6 +52,7 @@ class DatabaseService {
   // Update client status
   static async updateClientStatus(id, status) {
     try {
+      console.log('Updating client status:', { id, status });
       const response = await fetch(`${API_BASE_URL}/api/clients/${id}`, {
         method: 'PUT',
         headers: {
@@ -60,11 +61,17 @@ class DatabaseService {
         body: JSON.stringify({ status }),
       });
 
+      console.log('Update response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Update API Error:', errorText);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log('Update result:', result);
+      return result;
     } catch (error) {
       console.error('Error updating client status:', error);
       throw error;

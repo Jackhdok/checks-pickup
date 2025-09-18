@@ -120,7 +120,7 @@ function App({ initialView = 'public' }) {
     const client = waitingList.find(c => c.id === id);
     if (client) {
       setCalledClient(client);
-      await updateClientStatus(id, 'called');
+      await updateClientStatus(id, 'CALLED');
       
       // Client called - notification handled by UI
       

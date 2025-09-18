@@ -64,14 +64,14 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
     const client = waitingList.find(c => c.id === clientId);
     if (client) {
       // Update status to in-progress (ready to pick up check)
-      onUpdateStatus(clientId, 'in-progress');
+      onUpdateStatus(clientId, 'IN_PROGRESS');
       
       // Client ready for pickup - notification handled by UI
     }
   };
 
   const handleCompleteClient = (clientId) => {
-    onUpdateStatus(clientId, 'completed');
+    onUpdateStatus(clientId, 'COMPLETED');
     // Remove from public view after a short delay
     setTimeout(() => {
       onRemove(clientId);
