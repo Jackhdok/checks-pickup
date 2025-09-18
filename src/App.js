@@ -99,12 +99,16 @@ function App({ initialView = 'public' }) {
   const updateClientStatus = async (id, status) => {
     try {
       const normalized = normalizeStatus(status);
+      console.log('App: Updating client status:', { id, status, normalized });
       const updatedClient = await DatabaseService.updateClientStatus(id, normalized);
-      setWaitingList(prev => 
-        prev.map(client => 
+      console.log('App: Received updated client:', updatedClient);
+      setWaitingList(prev => {
+        const newList = prev.map(client => 
           client.id === id ? updatedClient : client
-        )
-      );
+        );
+        console.log('App: Updated waiting list:', newList);
+        return newList;
+      });
     } catch (error) {
       console.error('Error updating client status:', error);
       // Fallback to local state if database fails
