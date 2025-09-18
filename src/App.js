@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AdminPage from './components/AdminPage';
 import PublicCheckIn from './components/PublicCheckIn';
 import DatabaseService from './services/database';
@@ -10,37 +10,41 @@ function App({ initialView = 'public' }) {
   const [currentView] = useState(initialView); // 'admin' or 'public'
   const [calledClient, setCalledClient] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [lastStatuses, setLastStatuses] = useState({});
+  const lastStatusesRef = useRef({});
 
-  // Load clients from database on component mount
+  // Load and poll clients
   useEffect(() => {
-    loadClients();
-    const intervalId = setInterval(() => {
-      loadClients(true);
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const loadClients = async (isBackground = false) => {
-    try {
-      if (!isBackground) setLoading(true);
-      const clients = await DatabaseService.getClients();
-      setWaitingList(clients);
-      // Detect newly ready (IN_PROGRESS) clients for public notification
-      const statusMap = {};
-      clients.forEach(c => { statusMap[c.id] = c.status; });
-      const newlyReady = clients.find(c => c.status === 'IN_PROGRESS' && lastStatuses[c.id] && lastStatuses[c.id] !== 'IN_PROGRESS');
-      if (newlyReady && initialView === 'public') {
-        setCalledClient(newlyReady);
-        setTimeout(() => setCalledClient(null), 5000);
+    let isMounted = true;
+    const fetchClients = async (isBackground = false) => {
+      try {
+        if (!isBackground) setLoading(true);
+        const clients = await DatabaseService.getClients();
+        if (!isMounted) return;
+        setWaitingList(clients);
+        // Detect newly ready (IN_PROGRESS) clients for public notification
+        const prev = lastStatusesRef.current;
+        const statusMap = {};
+        clients.forEach(c => { statusMap[c.id] = c.status; });
+        const newlyReady = clients.find(c => c.status === 'IN_PROGRESS' && prev[c.id] && prev[c.id] !== 'IN_PROGRESS');
+        if (newlyReady && initialView === 'public') {
+          setCalledClient(newlyReady);
+          setTimeout(() => setCalledClient(null), 5000);
+        }
+        lastStatusesRef.current = statusMap;
+      } catch (error) {
+        console.error('Error loading clients:', error);
+      } finally {
+        if (!isBackground) setLoading(false);
       }
-      setLastStatuses(statusMap);
-    } catch (error) {
-      console.error('Error loading clients:', error);
-    } finally {
-      if (!isBackground) setLoading(false);
-    }
-  };
+    };
+
+    fetchClients();
+    const intervalId = setInterval(() => fetchClients(true), 5000);
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [initialView]);
 
   const normalizeStatus = (status) => {
     switch ((status || '').toLowerCase()) {
