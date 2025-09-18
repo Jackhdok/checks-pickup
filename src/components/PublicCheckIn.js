@@ -38,7 +38,7 @@ const PublicCheckIn = ({
         <div className="public-container">
           <CheckInForm onAddToWaitingList={onAddToWaitingList} isLightMode={isLightMode} />
           <PublicWaitingList 
-            waitingList={waitingList.filter(client => client.status !== 'completed')} 
+            waitingList={waitingList.filter(client => client.status !== 'COMPLETED')} 
             isLightMode={isLightMode}
           />
         </div>
