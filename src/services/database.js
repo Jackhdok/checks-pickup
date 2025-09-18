@@ -1,14 +1,15 @@
 // Database service for client operations
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://checks-pickup-ce3lddfvt-jack-hds-projects.vercel.app/api'
-  : 'http://localhost:3000/api';
+// Use relative path in production so it works with any deployment URL
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+  ? ''
+  : 'http://localhost:3000';
 
 class DatabaseService {
   // Get all clients
   static async getClients() {
     try {
       console.log('Fetching clients from:', `${API_BASE_URL}/clients`);
-      const response = await fetch(`${API_BASE_URL}/clients`);
+      const response = await fetch(`${API_BASE_URL}/api/clients`);
       console.log('Response status:', response.status);
       
       if (!response.ok) {
@@ -29,7 +30,7 @@ class DatabaseService {
   // Create new client
   static async createClient(clientData) {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients`, {
+      const response = await fetch(`${API_BASE_URL}/api/clients`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ class DatabaseService {
   // Update client status
   static async updateClientStatus(id, status) {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/clients/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ class DatabaseService {
   // Delete client
   static async deleteClient(id) {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/clients/${id}`, {
         method: 'DELETE',
       });
 
