@@ -9,10 +9,10 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<Navigate to="/check-in" replace />} />
         <Route path="/check-in" element={<App initialView="public" />} />
         <Route path="/admin" element={<App initialView="admin" />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/check-in" replace />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
