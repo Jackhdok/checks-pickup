@@ -1,6 +1,6 @@
 # Check-in Waiting List App
 
-A React-based waiting list management system similar to Yelp's check-in system, designed for vendors and subvendors to manage pickup checks.
+A React-based waiting list management system similar to Yelp's check-in system, designed for vendors and subcontractors to manage pickup checks.
 
 ## Features
 
@@ -15,7 +15,7 @@ A React-based waiting list management system similar to Yelp's check-in system, 
 - **Open Check-in Page**: Button to access the public client interface
 
 ### Public Check-in Page (Client Interface)
-- **Client Check-in Form**: Clients can input their name, phone number, and select their type (Vendor or Subvendor)
+- **Client Check-in Form**: Clients can input their name, phone number, and select their type (Vendor or Subcontractor)
 - **Purpose**: Automatically set to "Pickup Check" as requested
 - **Simplified Waiting List**: Shows only essential information for client confidentiality:
   - Client name only
@@ -81,7 +81,7 @@ A React-based waiting list management system similar to Yelp's check-in system, 
 1. Staff opens the public check-in page from admin dashboard
 2. Enter your full name
 3. Enter your phone number
-4. Select whether you're a Vendor or Subvendor
+4. Select whether you're a Vendor or Subcontractor
 5. Click "Join Waiting List" to be added to the queue
 6. Wait for the "Please come to Accounting Room" notification
 7. View your position in the queue with limited information:
