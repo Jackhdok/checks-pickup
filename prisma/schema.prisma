@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Client {
@@ -19,7 +19,7 @@ model Client {
   completedTime DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  purpose       String?      @default("pickup")
+  purpose       String?      @default("pickup") @db.VarChar(50)
 
   @@map("clients")
 }
