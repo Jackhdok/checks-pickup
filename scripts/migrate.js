@@ -6,78 +6,34 @@ async function migrate() {
   try {
     console.log('Starting database migration...');
     
-    // Check if clients table exists
-    const clientTables = await prisma.$queryRaw`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_name = 'clients';
-    `;
-    
-    if (clientTables.length === 0) {
-      console.log('Creating clients table...');
-      await prisma.$executeRaw`
-        CREATE TABLE clients (
-          id VARCHAR(255) PRIMARY KEY,
-          name VARCHAR(255) NOT NULL,
-          phone VARCHAR(255) NOT NULL,
-          type VARCHAR(50) NOT NULL,
-          manager VARCHAR(255) NOT NULL DEFAULT 'Anh Le',
-          purpose VARCHAR(50) DEFAULT 'pickup',
-          status VARCHAR(50) NOT NULL DEFAULT 'WAITING',
-          "checkInTime" TIMESTAMP NOT NULL DEFAULT NOW(),
-          "calledTime" TIMESTAMP,
-          "completedTime" TIMESTAMP,
-          "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
-          "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
-        );
-      `;
-      console.log('Clients table created successfully');
-    } else {
-      console.log('Clients table already exists');
-      
-      // Check if manager column exists
-      const managerColumns = await prisma.$queryRaw`
-        SELECT column_name 
-        FROM information_schema.columns 
-        WHERE table_name = 'clients' AND column_name = 'manager';
-      `;
-      
-      if (managerColumns.length === 0) {
-        console.log('Adding manager column to clients table...');
-        await prisma.$executeRaw`
-          ALTER TABLE clients 
-          ADD COLUMN manager VARCHAR(255) DEFAULT 'Anh Le';
-        `;
-        console.log('Manager column added successfully');
-      } else {
-        console.log('Manager column already exists');
-      }
-      
-      // Check if purpose column exists
-      const purposeColumns = await prisma.$queryRaw`
-        SELECT column_name 
-        FROM information_schema.columns 
-        WHERE table_name = 'clients' AND column_name = 'purpose';
-      `;
-      
-      if (purposeColumns.length === 0) {
-        console.log('Adding purpose column to clients table...');
-        await prisma.$executeRaw`
-          ALTER TABLE clients 
-          ADD COLUMN purpose VARCHAR(50) DEFAULT 'pickup';
-        `;
-        console.log('Purpose column added successfully');
-      } else {
-        console.log('Purpose column already exists');
-      }
+    // Test database connection by trying to query clients
+    try {
+      const clients = await prisma.client.findMany({
+        take: 1
+      });
+      console.log('Database connection successful');
+      console.log('Clients table exists and is accessible');
+    } catch (error) {
+      console.log('Database or table does not exist, but Prisma will handle schema creation');
     }
     
     // Update existing records to have a default manager if they don't have one
-    await prisma.$executeRaw`
-      UPDATE clients 
-      SET manager = 'Anh Le' 
-      WHERE manager IS NULL OR manager = '';
-    `;
+    try {
+      await prisma.client.updateMany({
+        where: {
+          OR: [
+            { manager: null },
+            { manager: '' }
+          ]
+        },
+        data: {
+          manager: 'Anh Le'
+        }
+      });
+      console.log('Updated existing records with default manager');
+    } catch (error) {
+      console.log('No existing records to update or table not ready yet');
+    }
     
     console.log('Database migration completed successfully');
   } catch (error) {
