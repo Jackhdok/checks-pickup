@@ -4,10 +4,10 @@ import PublicCheckIn from './components/PublicCheckIn';
 import DatabaseService from './services/database';
 import './App.css';
 
-function App() {
+function App({ initialView = 'public' }) {
   const [waitingList, setWaitingList] = useState([]);
   const [isLightMode, setIsLightMode] = useState(false);
-  const [currentView, setCurrentView] = useState('admin'); // 'admin' or 'public'
+  const [currentView, setCurrentView] = useState(initialView); // 'admin' or 'public'
   const [calledClient, setCalledClient] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -111,8 +111,8 @@ function App() {
         onUpdateStatus={updateClientStatus}
         onCallClient={callClient}
         isLightMode={isLightMode}
-        onBackToPublic={() => setCurrentView('public')}
-        onOpenPublicCheckIn={() => setCurrentView('public')}
+        onBackToPublic={() => (window.location.href = '/check-in')}
+        onOpenPublicCheckIn={() => (window.location.href = '/check-in')}
       />
     );
   }
