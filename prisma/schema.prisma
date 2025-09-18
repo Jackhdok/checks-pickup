@@ -15,6 +15,7 @@ model Client {
   name        String
   phone       String
   type        ClientType
+  manager     String
   status      ClientStatus @default(WAITING)
   checkInTime DateTime @default(now())
   calledTime  DateTime?
@@ -27,7 +28,7 @@ model Client {
 
 enum ClientType {
   VENDOR
-  SUBVENDOR
+  SUBCONTRACTOR
 }
 
 enum ClientStatus {

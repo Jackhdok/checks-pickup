@@ -161,8 +161,8 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
               <input
                 type="radio"
                 name="type"
-                value="subvendor"
-                checked={formData.type === 'subvendor'}
+                value="subcontractor"
+                checked={formData.type === 'subcontractor'}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
               />
