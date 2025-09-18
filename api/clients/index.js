@@ -17,11 +17,8 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      // Get all clients with manager information
+      // Get all clients
       const clients = await prisma.client.findMany({
-        include: {
-          manager: true
-        },
         orderBy: {
           checkInTime: 'asc'
         }
@@ -30,19 +27,10 @@ export default async function handler(req, res) {
       res.status(200).json(clients);
     } else if (req.method === 'POST') {
       // Create new client
-      const { name, phone, type, managerId, purpose = 'pickup' } = req.body;
+      const { name, phone, type, manager, purpose = 'pickup' } = req.body;
       
-      if (!name || !phone || !type || !managerId) {
-        return res.status(400).json({ error: 'Missing required fields: name, phone, type, managerId' });
-      }
-
-      // Verify manager exists
-      const manager = await prisma.manager.findUnique({
-        where: { id: managerId }
-      });
-
-      if (!manager) {
-        return res.status(400).json({ error: 'Manager not found' });
+      if (!name || !phone || !type || !manager) {
+        return res.status(400).json({ error: 'Missing required fields: name, phone, type, manager' });
       }
 
       const client = await prisma.client.create({
@@ -50,12 +38,9 @@ export default async function handler(req, res) {
           name,
           phone,
           type: type.toUpperCase(),
-          managerId,
+          manager,
           purpose,
           status: 'WAITING'
-        },
-        include: {
-          manager: true
         }
       });
 

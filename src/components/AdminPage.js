@@ -1,76 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Users, User, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, Monitor, UserPlus, Edit, Trash2, Mail, Phone as PhoneIcon } from 'lucide-react';
-import DatabaseService from '../services/database';
+import React, { useState } from 'react';
+import { Users, User, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, Monitor } from 'lucide-react';
 import './AdminPage.css';
 
 const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLightMode, onBackToPublic, onOpenPublicCheckIn, onLogout }) => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('clients');
-  const [managers, setManagers] = useState([]);
-  const [showManagerForm, setShowManagerForm] = useState(false);
-  const [editingManager, setEditingManager] = useState(null);
-  const [managerFormData, setManagerFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    department: ''
-  });
-
-  // Load managers on component mount
-  useEffect(() => {
-    loadManagers();
-  }, []);
-
-  const loadManagers = async () => {
-    try {
-      const managersData = await DatabaseService.getManagers();
-      setManagers(managersData);
-    } catch (error) {
-      console.error('Error loading managers:', error);
-    }
-  };
-
-  const handleManagerSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingManager) {
-        await DatabaseService.updateManager(editingManager.id, managerFormData);
-      } else {
-        await DatabaseService.createManager(managerFormData);
-      }
-      await loadManagers();
-      setShowManagerForm(false);
-      setEditingManager(null);
-      setManagerFormData({ name: '', email: '', phone: '', department: '' });
-    } catch (error) {
-      console.error('Error saving manager:', error);
-      alert('Error saving manager: ' + error.message);
-    }
-  };
-
-  const handleEditManager = (manager) => {
-    setEditingManager(manager);
-    setManagerFormData({
-      name: manager.name,
-      email: manager.email || '',
-      phone: manager.phone || '',
-      department: manager.department || ''
-    });
-    setShowManagerForm(true);
-  };
-
-  const handleDeleteManager = async (managerId) => {
-    if (window.confirm('Are you sure you want to delete this manager?')) {
-      try {
-        await DatabaseService.deleteManager(managerId);
-        await loadManagers();
-      } catch (error) {
-        console.error('Error deleting manager:', error);
-        alert('Error deleting manager: ' + error.message);
-      }
-    }
-  };
 
   const filteredList = waitingList.filter(client => {
     const matchesStatus = filterStatus === 'all' || client.status === filterStatus;
@@ -179,28 +114,8 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
 
       <div className="admin-main">
         <div className="admin-container">
-          {/* Tab Navigation */}
-          <div className="admin-tabs">
-            <button
-              className={`tab-button ${activeTab === 'clients' ? 'active' : ''}`}
-              onClick={() => setActiveTab('clients')}
-            >
-              <Users size={20} />
-              Clients ({statusCounts.total})
-            </button>
-            <button
-              className={`tab-button ${activeTab === 'managers' ? 'active' : ''}`}
-              onClick={() => setActiveTab('managers')}
-            >
-              <User size={20} />
-              Managers ({managers.length})
-            </button>
-          </div>
-
-          {activeTab === 'clients' && (
-            <>
-              {/* Statistics Cards */}
-              <div className="stats-grid">
+          {/* Statistics Cards */}
+          <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon waiting">
                 <Clock size={24} />
@@ -319,7 +234,7 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
                         <User size={14} />
                         <span className="detail-label">Manager:</span>
                         <span className="detail-value">
-                          {client.manager?.name || 'Unknown Manager'}
+                          {client.manager || 'Unknown Manager'}
                         </span>
                       </div>
                       
@@ -390,158 +305,6 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
               ))
             )}
           </div>
-            </>
-          )}
-
-          {activeTab === 'managers' && (
-            <div className="managers-section">
-              <div className="managers-header">
-                <h2>Manager Management</h2>
-                <button
-                  className="add-manager-button"
-                  onClick={() => {
-                    setEditingManager(null);
-                    setManagerFormData({ name: '', email: '', phone: '', department: '' });
-                    setShowManagerForm(true);
-                  }}
-                >
-                  <UserPlus size={20} />
-                  Add Manager
-                </button>
-              </div>
-
-              {showManagerForm && (
-                <div className="manager-form-overlay">
-                  <div className="manager-form">
-                    <div className="form-header">
-                      <h3>{editingManager ? 'Edit Manager' : 'Add New Manager'}</h3>
-                      <button
-                        className="close-button"
-                        onClick={() => {
-                          setShowManagerForm(false);
-                          setEditingManager(null);
-                          setManagerFormData({ name: '', email: '', phone: '', department: '' });
-                        }}
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-                    <form onSubmit={handleManagerSubmit}>
-                      <div className="form-group">
-                        <label>Name *</label>
-                        <input
-                          type="text"
-                          value={managerFormData.name}
-                          onChange={(e) => setManagerFormData({...managerFormData, name: e.target.value})}
-                          required
-                          placeholder="Manager name"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Email</label>
-                        <input
-                          type="email"
-                          value={managerFormData.email}
-                          onChange={(e) => setManagerFormData({...managerFormData, email: e.target.value})}
-                          placeholder="manager@example.com"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Phone</label>
-                        <input
-                          type="tel"
-                          value={managerFormData.phone}
-                          onChange={(e) => setManagerFormData({...managerFormData, phone: e.target.value})}
-                          placeholder="Phone number"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Department</label>
-                        <input
-                          type="text"
-                          value={managerFormData.department}
-                          onChange={(e) => setManagerFormData({...managerFormData, department: e.target.value})}
-                          placeholder="Department"
-                        />
-                      </div>
-                      <div className="form-actions">
-                        <button type="button" onClick={() => setShowManagerForm(false)}>
-                          Cancel
-                        </button>
-                        <button type="submit">
-                          {editingManager ? 'Update Manager' : 'Add Manager'}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
-
-              <div className="managers-list">
-                {managers.length === 0 ? (
-                  <div className="empty-state">
-                    <User size={48} className="empty-icon" />
-                    <h3>No managers found</h3>
-                    <p>Add your first manager to get started</p>
-                  </div>
-                ) : (
-                  managers.map((manager) => (
-                    <div key={manager.id} className="manager-card">
-                      <div className="manager-info">
-                        <div className="manager-header">
-                          <h3>{manager.name}</h3>
-                          <div className="manager-actions">
-                            <button
-                              className="action-button edit"
-                              onClick={() => handleEditManager(manager)}
-                              title="Edit manager"
-                            >
-                              <Edit size={16} />
-                            </button>
-                            <button
-                              className="action-button delete"
-                              onClick={() => handleDeleteManager(manager.id)}
-                              title="Delete manager"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="manager-details">
-                          {manager.email && (
-                            <div className="detail-item">
-                              <Mail size={14} />
-                              <span>{manager.email}</span>
-                            </div>
-                          )}
-                          {manager.phone && (
-                            <div className="detail-item">
-                              <PhoneIcon size={14} />
-                              <span>{manager.phone}</span>
-                            </div>
-                          )}
-                          {manager.department && (
-                            <div className="detail-item">
-                              <Building2 size={14} />
-                              <span>{manager.department}</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="manager-stats">
-                          <span className="client-count">
-                            {manager.clients?.length || 0} clients
-                          </span>
-                          <span className={`status-badge ${manager.isActive ? 'active' : 'inactive'}`}>
-                            {manager.isActive ? 'Active' : 'Inactive'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

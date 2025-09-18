@@ -110,7 +110,7 @@ const PublicWaitingList = ({ waitingList, isLightMode }) => {
                   <User size={14} />
                   <span className="detail-label">Manager:</span>
                   <span className="detail-value">
-                    {client.manager?.name || 'Unknown Manager'}
+                    {client.manager || 'Unknown Manager'}
                   </span>
                 </div>
                 

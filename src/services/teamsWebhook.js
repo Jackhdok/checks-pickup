@@ -77,7 +77,7 @@ const sendTeamsNotification = async (clientData) => {
                   },
                   {
                     "title": "Manager",
-                    "value": clientData.manager?.name || clientData.manager || 'Unknown Manager'
+                    "value": clientData.manager || 'Unknown Manager'
                   },
                   {
                     "title": "Purpose",
