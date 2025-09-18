@@ -95,6 +95,20 @@
   cursor: not-allowed;
 }
 
+select.form-input {
+  cursor: pointer;
+}
+
+select.form-input option {
+  background-color: #0f0f0f;
+  color: #ffffff;
+}
+
+.checkin-form.light-mode select.form-input option {
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
 .radio-group {
   display: flex;
   gap: 1rem;

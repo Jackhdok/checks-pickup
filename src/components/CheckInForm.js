@@ -8,6 +8,7 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
     name: '',
     phone: '',
     type: '',
+    manager: '',
     purpose: 'pickup'
   });
   const [errors, setErrors] = useState({});
@@ -47,6 +48,10 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
       newErrors.type = 'Please select vendor type';
     }
     
+    if (!formData.manager) {
+      newErrors.manager = 'Please select a manager';
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -72,6 +77,7 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
         name: '',
         phone: '',
         type: '',
+        manager: '',
         purpose: 'pickup'
       });
       
@@ -160,10 +166,31 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
                 onChange={handleInputChange}
                 disabled={isSubmitting}
               />
-              <span className="radio-label">Subvendor</span>
+              <span className="radio-label">Subcontractor</span>
             </label>
           </div>
           {errors.type && <span className="error-message">{errors.type}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="manager" className="form-label">
+            <User size={20} />
+            Manager *
+          </label>
+          <select
+            id="manager"
+            name="manager"
+            value={formData.manager}
+            onChange={handleInputChange}
+            className={`form-input ${errors.manager ? 'error' : ''}`}
+            disabled={isSubmitting}
+          >
+            <option value="">Select a manager</option>
+            <option value="Anh Le">Anh Le</option>
+            <option value="Juaito">Juaito</option>
+            <option value="Andy">Andy</option>
+          </select>
+          {errors.manager && <span className="error-message">{errors.manager}</span>}
         </div>
 
         <div className="form-group">
