@@ -66,7 +66,7 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
     
     try {
       // Add to waiting list (Teams notification will be sent by the API)
-      onAddToWaitingList(formData);
+      await onAddToWaitingList(formData);
       
       // Reset form
       setFormData({
@@ -84,7 +84,7 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
     } catch (error) {
       console.error('Error during check-in:', error);
       // Still add to waiting list even if Teams notification fails
-      onAddToWaitingList(formData);
+      await onAddToWaitingList(formData);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } finally {
