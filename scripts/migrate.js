@@ -6,22 +6,51 @@ async function migrate() {
   try {
     console.log('Starting database migration...');
     
-    // Check if manager column exists
-    const columns = await prisma.$queryRaw`
-      SELECT column_name 
-      FROM information_schema.columns 
-      WHERE table_name = 'clients' AND column_name = 'manager';
+    // Check if clients table exists
+    const tables = await prisma.$queryRaw`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_name = 'clients';
     `;
     
-    if (columns.length === 0) {
-      console.log('Adding manager column to clients table...');
+    if (tables.length === 0) {
+      console.log('Creating clients table...');
       await prisma.$executeRaw`
-        ALTER TABLE clients 
-        ADD COLUMN manager VARCHAR(255) DEFAULT 'Anh Le';
+        CREATE TABLE clients (
+          id VARCHAR(255) PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          phone VARCHAR(255) NOT NULL,
+          type VARCHAR(50) NOT NULL,
+          manager VARCHAR(255) NOT NULL DEFAULT 'Anh Le',
+          status VARCHAR(50) NOT NULL DEFAULT 'WAITING',
+          "checkInTime" TIMESTAMP NOT NULL DEFAULT NOW(),
+          "calledTime" TIMESTAMP,
+          "completedTime" TIMESTAMP,
+          "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+          "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
+        );
       `;
-      console.log('Manager column added successfully');
+      console.log('Clients table created successfully');
     } else {
-      console.log('Manager column already exists');
+      console.log('Clients table already exists');
+      
+      // Check if manager column exists
+      const columns = await prisma.$queryRaw`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'clients' AND column_name = 'manager';
+      `;
+      
+      if (columns.length === 0) {
+        console.log('Adding manager column to clients table...');
+        await prisma.$executeRaw`
+          ALTER TABLE clients 
+          ADD COLUMN manager VARCHAR(255) DEFAULT 'Anh Le';
+        `;
+        console.log('Manager column added successfully');
+      } else {
+        console.log('Manager column already exists');
+      }
     }
     
     // Update existing records to have a default manager if they don't have one
