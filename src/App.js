@@ -10,6 +10,7 @@ function App({ initialView = 'public' }) {
   const [currentView] = useState(initialView); // 'admin' or 'public'
   const [calledClient, setCalledClient] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const lastStatusesRef = useRef({});
 
   // Load and poll clients
@@ -17,7 +18,11 @@ function App({ initialView = 'public' }) {
     let isMounted = true;
     const fetchClients = async (isBackground = false) => {
       try {
-        if (!isBackground) setLoading(true);
+        if (!isBackground) {
+          setLoading(true);
+        } else {
+          setRefreshing(true);
+        }
         const clients = await DatabaseService.getClients();
         if (!isMounted) return;
         setWaitingList(clients);
@@ -26,7 +31,7 @@ function App({ initialView = 'public' }) {
         const statusMap = {};
         clients.forEach(c => { statusMap[c.id] = c.status; });
         const newlyReady = clients.find(c => c.status === 'IN_PROGRESS' && prev[c.id] && prev[c.id] !== 'IN_PROGRESS');
-        if (newlyReady && initialView === 'public') {
+        if (newlyReady) {
           setCalledClient(newlyReady);
           setTimeout(() => setCalledClient(null), 5000);
         }
@@ -34,7 +39,11 @@ function App({ initialView = 'public' }) {
       } catch (error) {
         console.error('Error loading clients:', error);
       } finally {
-        if (!isBackground) setLoading(false);
+        if (!isBackground) {
+          setLoading(false);
+        } else {
+          setRefreshing(false);
+        }
       }
     };
 
@@ -44,7 +53,7 @@ function App({ initialView = 'public' }) {
       isMounted = false;
       clearInterval(intervalId);
     };
-  }, [initialView]);
+  }, []); // Remove initialView dependency to ensure it runs on every mount
 
   const normalizeStatus = (status) => {
     switch ((status || '').toLowerCase()) {
@@ -134,26 +143,42 @@ function App({ initialView = 'public' }) {
 
   if (currentView === 'admin') {
     return (
-      <AdminPage
-        waitingList={waitingList}
-        onRemove={removeFromWaitingList}
-        onUpdateStatus={updateClientStatus}
-        onCallClient={callClient}
-        isLightMode={isLightMode}
-        onBackToPublic={() => (window.location.href = '/check-in')}
-        onOpenPublicCheckIn={() => (window.location.href = '/check-in')}
-      />
+      <div>
+        {refreshing && (
+          <div className="refresh-indicator">
+            <div className="refresh-spinner"></div>
+            <span>Refreshing...</span>
+          </div>
+        )}
+        <AdminPage
+          waitingList={waitingList}
+          onRemove={removeFromWaitingList}
+          onUpdateStatus={updateClientStatus}
+          onCallClient={callClient}
+          isLightMode={isLightMode}
+          onBackToPublic={() => (window.location.href = '/check-in')}
+          onOpenPublicCheckIn={() => (window.location.href = '/check-in')}
+        />
+      </div>
     );
   }
 
   return (
-    <PublicCheckIn
-      waitingList={waitingList}
-      onAddToWaitingList={addToWaitingList}
-      isLightMode={isLightMode}
-      setIsLightMode={setIsLightMode}
-      calledClient={calledClient}
-    />
+    <div>
+      {refreshing && (
+        <div className="refresh-indicator">
+          <div className="refresh-spinner"></div>
+          <span>Refreshing...</span>
+        </div>
+      )}
+      <PublicCheckIn
+        waitingList={waitingList}
+        onAddToWaitingList={addToWaitingList}
+        isLightMode={isLightMode}
+        setIsLightMode={setIsLightMode}
+        calledClient={calledClient}
+      />
+    </div>
   );
 }
 
