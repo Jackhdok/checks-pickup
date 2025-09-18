@@ -76,6 +76,10 @@ const sendTeamsNotification = async (clientData) => {
                     "value": clientData.type === 'vendor' ? 'Vendor' : 'Subvendor'
                   },
                   {
+                    "title": "Manager",
+                    "value": clientData.manager?.name || clientData.manager || 'Unknown Manager'
+                  },
+                  {
                     "title": "Purpose",
                     "value": "Pickup Check"
                   },

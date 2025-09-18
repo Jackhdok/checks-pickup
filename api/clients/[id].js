@@ -37,7 +37,10 @@ export default async function handler(req, res) {
 
       const client = await prisma.client.update({
         where: { id },
-        data: updateData
+        data: updateData,
+        include: {
+          manager: true
+        }
       });
 
       res.status(200).json(client);

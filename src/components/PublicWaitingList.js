@@ -107,6 +107,14 @@ const PublicWaitingList = ({ waitingList, isLightMode }) => {
               
               <div className="client-details">
                 <div className="detail-item">
+                  <User size={14} />
+                  <span className="detail-label">Manager:</span>
+                  <span className="detail-value">
+                    {client.manager?.name || 'Unknown Manager'}
+                  </span>
+                </div>
+                
+                <div className="detail-item">
                   <Clock size={14} />
                   <span className="detail-label">Check-in:</span>
                   <span className="detail-value">{formatTime(client.checkInTime)}</span>

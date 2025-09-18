@@ -108,6 +108,14 @@ const WaitingList = ({ waitingList, onRemove, onUpdateStatus, isLightMode, isPub
                 </div>
                 
                 <div className="detail-item">
+                  <User size={14} />
+                  <span className="detail-label">Manager:</span>
+                  <span className="detail-value">
+                    {client.manager?.name || 'Unknown Manager'}
+                  </span>
+                </div>
+                
+                <div className="detail-item">
                   <Package size={14} />
                   <span className="detail-label">Purpose:</span>
                   <span className="detail-value">Pickup Check</span>

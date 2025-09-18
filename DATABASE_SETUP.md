@@ -37,11 +37,29 @@ The database schema will be automatically deployed when you push to GitHub and V
 The application uses the following database schema:
 
 ```prisma
+model Manager {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?  @unique
+  phone       String?
+  department  String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  clients     Client[]
+
+  @@map("managers")
+}
+
 model Client {
   id          String   @id @default(cuid())
   name        String
   phone       String
   type        ClientType
+  managerId   String
+  purpose     String   @default("pickup")
   status      ClientStatus @default(WAITING)
   checkInTime DateTime @default(now())
   calledTime  DateTime?
@@ -49,12 +67,15 @@ model Client {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Relationships
+  manager     Manager  @relation(fields: [managerId], references: [id])
+
   @@map("clients")
 }
 
 enum ClientType {
   VENDOR
-  SUBVENDOR
+  SUBCONTRACTOR
 }
 
 enum ClientStatus {
@@ -69,10 +90,17 @@ enum ClientStatus {
 
 The application provides the following API endpoints:
 
+### Client Endpoints
 - `GET /api/clients` - Get all clients
 - `POST /api/clients` - Create a new client
 - `PUT /api/clients/[id]` - Update client status
 - `DELETE /api/clients/[id]` - Delete a client
+
+### Manager Endpoints
+- `GET /api/managers` - Get all managers
+- `POST /api/managers` - Create a new manager
+- `PUT /api/managers/[id]` - Update manager information
+- `DELETE /api/managers/[id]` - Delete a manager
 
 ## 8. Local Development
 

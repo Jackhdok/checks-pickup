@@ -10,12 +10,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Manager {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?  @unique
+  phone       String?
+  department  String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  clients     Client[]
+
+  @@map("managers")
+}
+
 model Client {
   id          String   @id @default(cuid())
   name        String
   phone       String
   type        ClientType
-  manager     String
+  managerId   String
   purpose     String   @default("pickup")
   status      ClientStatus @default(WAITING)
   checkInTime DateTime @default(now())
@@ -23,6 +39,9 @@ model Client {
   completedTime DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Relationships
+  manager     Manager  @relation(fields: [managerId], references: [id])
 
   @@map("clients")
 }

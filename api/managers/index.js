@@ -1,4 +1,4 @@
-// API route for client operations (GET, POST)
+// API route for manager operations (GET, POST)
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -17,49 +17,51 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      // Get all clients with manager information
-      const clients = await prisma.client.findMany({
+      // Get all managers
+      const managers = await prisma.manager.findMany({
         include: {
-          manager: true
+          clients: {
+            orderBy: {
+              checkInTime: 'asc'
+            }
+          }
         },
         orderBy: {
-          checkInTime: 'asc'
+          name: 'asc'
         }
       });
       
-      res.status(200).json(clients);
+      res.status(200).json(managers);
     } else if (req.method === 'POST') {
-      // Create new client
-      const { name, phone, type, managerId, purpose = 'pickup' } = req.body;
+      // Create new manager
+      const { name, email, phone, department } = req.body;
       
-      if (!name || !phone || !type || !managerId) {
-        return res.status(400).json({ error: 'Missing required fields: name, phone, type, managerId' });
+      if (!name) {
+        return res.status(400).json({ error: 'Name is required' });
       }
 
-      // Verify manager exists
-      const manager = await prisma.manager.findUnique({
-        where: { id: managerId }
-      });
+      // Check if email is unique if provided
+      if (email) {
+        const existingManager = await prisma.manager.findUnique({
+          where: { email }
+        });
 
-      if (!manager) {
-        return res.status(400).json({ error: 'Manager not found' });
+        if (existingManager) {
+          return res.status(400).json({ error: 'Email already exists' });
+        }
       }
 
-      const client = await prisma.client.create({
+      const manager = await prisma.manager.create({
         data: {
           name,
-          phone,
-          type: type.toUpperCase(),
-          managerId,
-          purpose,
-          status: 'WAITING'
-        },
-        include: {
-          manager: true
+          email: email || null,
+          phone: phone || null,
+          department: department || null,
+          isActive: true
         }
       });
 
-      res.status(201).json(client);
+      res.status(201).json(manager);
     } else {
       res.setHeader('Allow', ['GET', 'POST']);
       res.status(405).end(`Method ${req.method} Not Allowed`);

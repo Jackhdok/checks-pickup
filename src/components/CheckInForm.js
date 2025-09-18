@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Phone, Building2, Package, CheckCircle } from 'lucide-react';
 import sendTeamsNotification from '../services/teamsWebhook';
+import DatabaseService from '../services/database';
 import './CheckInForm.css';
 
 const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
@@ -8,12 +9,27 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
     name: '',
     phone: '',
     type: '',
-    manager: '',
+    managerId: '',
     purpose: 'pickup'
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [managers, setManagers] = useState([]);
+
+  // Load managers on component mount
+  useEffect(() => {
+    loadManagers();
+  }, []);
+
+  const loadManagers = async () => {
+    try {
+      const managersData = await DatabaseService.getManagers();
+      setManagers(managersData.filter(manager => manager.isActive));
+    } catch (error) {
+      console.error('Error loading managers:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,8 +64,8 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
       newErrors.type = 'Please select vendor type';
     }
     
-    if (!formData.manager) {
-      newErrors.manager = 'Please select a manager';
+    if (!formData.managerId) {
+      newErrors.managerId = 'Please select a manager';
     }
     
     setErrors(newErrors);
@@ -77,7 +93,7 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
         name: '',
         phone: '',
         type: '',
-        manager: '',
+        managerId: '',
         purpose: 'pickup'
       });
       
@@ -173,24 +189,26 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="manager" className="form-label">
+          <label htmlFor="managerId" className="form-label">
             <User size={20} />
             Manager *
           </label>
           <select
-            id="manager"
-            name="manager"
-            value={formData.manager}
+            id="managerId"
+            name="managerId"
+            value={formData.managerId}
             onChange={handleInputChange}
-            className={`form-input ${errors.manager ? 'error' : ''}`}
+            className={`form-input ${errors.managerId ? 'error' : ''}`}
             disabled={isSubmitting}
           >
             <option value="">Select a manager</option>
-            <option value="Anh Le">Anh Le</option>
-            <option value="Juanito">Juanito</option>
-            <option value="Andy">Andy</option>
+            {managers.map((manager) => (
+              <option key={manager.id} value={manager.id}>
+                {manager.name}
+              </option>
+            ))}
           </select>
-          {errors.manager && <span className="error-message">{errors.manager}</span>}
+          {errors.managerId && <span className="error-message">{errors.managerId}</span>}
         </div>
 
         <div className="form-group">
