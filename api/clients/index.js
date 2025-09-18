@@ -66,7 +66,11 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.error('Database error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message,
+      type: error.constructor.name
+    });
   } finally {
     await prisma.$disconnect();
   }
