@@ -79,12 +79,8 @@ async function migrate() {
       WHERE manager IS NULL OR manager = '';
     `;
     
-    // Update SUBVENDOR to SUBCONTRACTOR in existing records
-    await prisma.$executeRaw`
-      UPDATE clients 
-      SET type = 'SUBCONTRACTOR' 
-      WHERE type = 'SUBVENDOR';
-    `;
+    // Skip enum updates for now - let Prisma handle the schema
+    console.log('Skipping enum updates - Prisma will handle schema changes');
     
     console.log('Database migration completed successfully');
   } catch (error) {
