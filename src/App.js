@@ -10,21 +10,45 @@ function App({ initialView = 'public' }) {
   const [currentView] = useState(initialView); // 'admin' or 'public'
   const [calledClient, setCalledClient] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [lastStatuses, setLastStatuses] = useState({});
 
   // Load clients from database on component mount
   useEffect(() => {
     loadClients();
+    const intervalId = setInterval(() => {
+      loadClients(true);
+    }, 5000);
+    return () => clearInterval(intervalId);
   }, []);
 
-  const loadClients = async () => {
+  const loadClients = async (isBackground = false) => {
     try {
-      setLoading(true);
+      if (!isBackground) setLoading(true);
       const clients = await DatabaseService.getClients();
       setWaitingList(clients);
+      // Detect newly ready (IN_PROGRESS) clients for public notification
+      const statusMap = {};
+      clients.forEach(c => { statusMap[c.id] = c.status; });
+      const newlyReady = clients.find(c => c.status === 'IN_PROGRESS' && lastStatuses[c.id] && lastStatuses[c.id] !== 'IN_PROGRESS');
+      if (newlyReady && initialView === 'public') {
+        setCalledClient(newlyReady);
+        setTimeout(() => setCalledClient(null), 5000);
+      }
+      setLastStatuses(statusMap);
     } catch (error) {
       console.error('Error loading clients:', error);
     } finally {
-      setLoading(false);
+      if (!isBackground) setLoading(false);
+    }
+  };
+
+  const normalizeStatus = (status) => {
+    switch ((status || '').toLowerCase()) {
+      case 'waiting': return 'WAITING';
+      case 'called': return 'CALLED';
+      case 'in-progress': return 'IN_PROGRESS';
+      case 'completed': return 'COMPLETED';
+      default: return status && status.toUpperCase ? status.toUpperCase() : 'WAITING';
     }
   };
 
@@ -61,7 +85,8 @@ function App({ initialView = 'public' }) {
 
   const updateClientStatus = async (id, status) => {
     try {
-      const updatedClient = await DatabaseService.updateClientStatus(id, status.toUpperCase());
+      const normalized = normalizeStatus(status);
+      const updatedClient = await DatabaseService.updateClientStatus(id, normalized);
       setWaitingList(prev => 
         prev.map(client => 
           client.id === id ? updatedClient : client
@@ -72,7 +97,7 @@ function App({ initialView = 'public' }) {
       // Fallback to local state if database fails
       setWaitingList(prev => 
         prev.map(client => 
-          client.id === id ? { ...client, status: status.toUpperCase() } : client
+          client.id === id ? { ...client, status: normalizeStatus(status) } : client
         )
       );
     }

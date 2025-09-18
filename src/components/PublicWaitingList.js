@@ -6,12 +6,16 @@ const PublicWaitingList = ({ waitingList, isLightMode }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'waiting':
+      case 'WAITING':
         return '#f59e0b';
       case 'called':
+      case 'CALLED':
         return '#8b5cf6';
       case 'in-progress':
+      case 'IN_PROGRESS':
         return '#3b82f6';
       case 'completed':
+      case 'COMPLETED':
         return '#10b981';
       default:
         return '#6b7280';
@@ -21,12 +25,16 @@ const PublicWaitingList = ({ waitingList, isLightMode }) => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'waiting':
+      case 'WAITING':
         return <Clock size={16} />;
       case 'called':
+      case 'CALLED':
         return <CheckCircle size={16} />;
       case 'in-progress':
+      case 'IN_PROGRESS':
         return <CheckCircle size={16} />;
       case 'completed':
+      case 'COMPLETED':
         return <CheckCircle size={16} />;
       default:
         return <Clock size={16} />;
