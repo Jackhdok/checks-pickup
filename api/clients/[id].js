@@ -22,8 +22,6 @@ export default async function handler(req, res) {
       // Update client status
       const { status } = req.body;
       
-      console.log('API: Updating client status:', { id, status });
-      
       if (!status) {
         return res.status(400).json({ error: 'Status is required' });
       }
@@ -37,14 +35,11 @@ export default async function handler(req, res) {
         updateData.completedTime = new Date();
       }
 
-      console.log('API: Update data:', updateData);
-
       const client = await prisma.client.update({
         where: { id },
         data: updateData
       });
 
-      console.log('API: Updated client:', client);
       res.status(200).json(client);
     } else if (req.method === 'DELETE') {
       // Delete client
