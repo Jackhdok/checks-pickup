@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, User, Monitor } from 'lucide-react';
+import { Users, User, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, Monitor } from 'lucide-react';
 import './AdminPage.css';
 
 const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLightMode, onBackToPublic, onOpenPublicCheckIn, onLogout }) => {
