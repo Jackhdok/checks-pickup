@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       res.status(200).json(clients);
     } else if (req.method === 'POST') {
       // Create new client
-      const { name, phone, type, manager } = req.body;
+      const { name, phone, type, manager, purpose = 'pickup' } = req.body;
       
       if (!name || !phone || !type || !manager) {
         return res.status(400).json({ error: 'Missing required fields: name, phone, type, manager' });
@@ -39,6 +39,7 @@ export default async function handler(req, res) {
           phone,
           type: type.toUpperCase(),
           manager,
+          purpose,
           status: 'WAITING'
         }
       });

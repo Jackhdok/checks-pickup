@@ -22,6 +22,7 @@ async function migrate() {
           phone VARCHAR(255) NOT NULL,
           type VARCHAR(50) NOT NULL,
           manager VARCHAR(255) NOT NULL DEFAULT 'Anh Le',
+          purpose VARCHAR(50) DEFAULT 'pickup',
           status VARCHAR(50) NOT NULL DEFAULT 'WAITING',
           "checkInTime" TIMESTAMP NOT NULL DEFAULT NOW(),
           "calledTime" TIMESTAMP,
@@ -50,6 +51,24 @@ async function migrate() {
         console.log('Manager column added successfully');
       } else {
         console.log('Manager column already exists');
+      }
+      
+      // Check if purpose column exists
+      const purposeColumns = await prisma.$queryRaw`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'clients' AND column_name = 'purpose';
+      `;
+      
+      if (purposeColumns.length === 0) {
+        console.log('Adding purpose column to clients table...');
+        await prisma.$executeRaw`
+          ALTER TABLE clients 
+          ADD COLUMN purpose VARCHAR(50) DEFAULT 'pickup';
+        `;
+        console.log('Purpose column added successfully');
+      } else {
+        console.log('Purpose column already exists');
       }
     }
     

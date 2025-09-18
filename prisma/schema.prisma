@@ -16,6 +16,7 @@ model Client {
   phone       String
   type        ClientType
   manager     String
+  purpose     String   @default("pickup")
   status      ClientStatus @default(WAITING)
   checkInTime DateTime @default(now())
   calledTime  DateTime?
