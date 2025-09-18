@@ -161,12 +161,12 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
               <input
                 type="radio"
                 name="type"
-                value="subcontractor"
-                checked={formData.type === 'subcontractor'}
+                value="subvendor"
+                checked={formData.type === 'subvendor'}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
               />
-              <span className="radio-label">Subcontractor</span>
+              <span className="radio-label">Subvendor</span>
             </label>
           </div>
           {errors.type && <span className="error-message">{errors.type}</span>}
