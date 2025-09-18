@@ -35,7 +35,7 @@ function App({ initialView = 'public' }) {
 
   const handlePinSubmit = (e) => {
     e.preventDefault();
-    if (pinCode === '12952') {
+    if (pinCode === '12962') {
       setIsAuthenticated(true);
       localStorage.setItem('admin_authenticated', 'true');
       setPinError('');
