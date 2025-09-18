@@ -90,7 +90,7 @@ const sendTeamsNotification = async (clientData) => {
               {
                 "type": "Action.OpenUrl",
                 "title": "View Admin Dashboard",
-                "url": window.location.origin
+                "url": "https://checks-pickup.vercel.app/admin"
               }
             ]
           }
