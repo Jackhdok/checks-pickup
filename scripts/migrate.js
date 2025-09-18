@@ -6,17 +6,36 @@ async function migrate() {
   try {
     console.log('Starting database migration...');
     
-    // Add manager column if it doesn't exist
-    await prisma.$executeRaw`
-      ALTER TABLE clients 
-      ADD COLUMN IF NOT EXISTS manager VARCHAR(255);
+    // Check if manager column exists
+    const columns = await prisma.$queryRaw`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'clients' AND column_name = 'manager';
     `;
     
-    // Update existing records to have a default manager
+    if (columns.length === 0) {
+      console.log('Adding manager column to clients table...');
+      await prisma.$executeRaw`
+        ALTER TABLE clients 
+        ADD COLUMN manager VARCHAR(255) DEFAULT 'Anh Le';
+      `;
+      console.log('Manager column added successfully');
+    } else {
+      console.log('Manager column already exists');
+    }
+    
+    // Update existing records to have a default manager if they don't have one
     await prisma.$executeRaw`
       UPDATE clients 
       SET manager = 'Anh Le' 
-      WHERE manager IS NULL;
+      WHERE manager IS NULL OR manager = '';
+    `;
+    
+    // Update SUBVENDOR to SUBCONTRACTOR in existing records
+    await prisma.$executeRaw`
+      UPDATE clients 
+      SET type = 'SUBCONTRACTOR' 
+      WHERE type = 'SUBVENDOR';
     `;
     
     console.log('Database migration completed successfully');
