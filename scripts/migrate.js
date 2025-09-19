@@ -1,5 +1,11 @@
 const { PrismaClient } = require('@prisma/client');
 
+// Only run migration if DATABASE_URL is available
+if (!process.env.DATABASE_URL) {
+  console.log('DATABASE_URL not set, skipping migration');
+  process.exit(0);
+}
+
 const prisma = new PrismaClient();
 
 async function migrate() {
