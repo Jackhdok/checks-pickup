@@ -25,83 +25,15 @@ const sendTeamsNotification = async (clientData) => {
       return Promise.resolve();
     }
 
+    // Simple JSON payload for Power Automate
     const message = {
-      "type": "object",
-      "attachments": [
-        {
-          "contentType": "application/vnd.microsoft.teams.card.adaptive",
-          "contentUrl": null,
-          "content": {
-            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            "type": "AdaptiveCard",
-            "version": "1.2",
-            "body": [
-              {
-                "type": "TextBlock",
-                "text": "Hi Loan,",
-                "weight": "Bolder",
-                "size": "Large",
-                "color": "Accent"
-              },
-              {
-                "type": "TextBlock",
-                "text": `You have **${clientData.name}** come to pick up the checks. Please prepare!`,
-                "weight": "Bold",
-                "size": "Medium",
-                "wrap": true
-              },
-              {
-                "type": "TextBlock",
-                "text": "Here are the details:",
-                "weight": "Bold",
-                "size": "Small",
-                "spacing": "Medium"
-              },
-              {
-                "type": "FactSet",
-                "facts": [
-                  {
-                    "title": "Visitor Name",
-                    "value": clientData.name
-                  },
-                  {
-                    "title": "Phone Number",
-                    "value": clientData.phone
-                  },
-                  {
-                    "title": "Type",
-                    "value": clientData.type === 'vendor' ? 'Vendor' : 'Subcontractor'
-                  },
-                  {
-                    "title": "Manager",
-                    "value": clientData.manager || 'Unknown Manager'
-                  },
-                  {
-                    "title": "Purpose",
-                    "value": "Pickup Check"
-                  },
-                  {
-                    "title": "Check-in Time",
-                    "value": new Date().toLocaleString()
-                  }
-                ]
-              }
-            ],
-            "actions": [
-              {
-                "type": "Action.OpenUrl",
-                "title": "View Admin Dashboard",
-                "url": "https://checks-pickup.vercel.app/admin"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "Open Check-in Page",
-                "url": "https://checks-pickup.vercel.app/check-in"
-              }
-            ]
-          }
-        }
-      ]
+      "name": clientData.name,
+      "phone": clientData.phone,
+      "type": clientData.type === 'vendor' ? 'Vendor' : 'Subcontractor',
+      "manager": clientData.manager || 'Unknown Manager',
+      "purpose": "Pickup Check",
+      "checkInTime": new Date().toISOString(),
+      "message": `Hi Loan, ${clientData.name} has come to pick up checks. Please prepare!`
     };
 
     const response = await fetch(webhookUrl, {

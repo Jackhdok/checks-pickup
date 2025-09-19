@@ -20,71 +20,15 @@ const sendTeamsNotification = async (clientData) => {
     
     const webhookUrl = process.env.REACT_APP_TEAMS_WEBHOOK_URL || 'https://default615878b3a96f4a16bf757f30b157ce.5a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4eba1566011241f3affa750bf6407657/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7PrTXGMC7pvRgZU34ALou31pEklvPnrlHteE5HHx0Wk';
     
+    // Simple JSON payload for Power Automate
     const message = {
-      "type": "object",
-      "attachments": [
-        {
-          "contentType": "application/vnd.microsoft.teams.card.adaptive",
-          "contentUrl": null,
-          "content": {
-            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            "type": "AdaptiveCard",
-            "version": "1.2",
-            "body": [
-              {
-                "type": "TextBlock",
-                "text": "Hi Loan,",
-                "weight": "Bolder",
-                "size": "Large",
-                "color": "Accent"
-              },
-              {
-                "type": "TextBlock",
-                "text": `You have **${clientData.name}** come to pick up the checks. Please prepare!`,
-                "weight": "Bold",
-                "size": "Medium",
-                "wrap": true
-              },
-              {
-                "type": "TextBlock",
-                "text": "Here are the details:",
-                "weight": "Bold",
-                "size": "Small",
-                "spacing": "Medium"
-              },
-              {
-                "type": "FactSet",
-                "facts": [
-                  {
-                    "title": "Visitor Name",
-                    "value": clientData.name
-                  },
-                  {
-                    "title": "Phone Number",
-                    "value": clientData.phone
-                  },
-                  {
-                    "title": "Type",
-                    "value": clientData.type === 'vendor' ? 'Vendor' : 'Subcontractor'
-                  },
-                  {
-                    "title": "Manager",
-                    "value": clientData.manager || 'Unknown Manager'
-                  },
-                  {
-                    "title": "Purpose",
-                    "value": "Pickup Check"
-                  },
-                  {
-                    "title": "Check-in Time",
-                    "value": new Date().toLocaleString()
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      ]
+      "name": clientData.name,
+      "phone": clientData.phone,
+      "type": clientData.type === 'vendor' ? 'Vendor' : 'Subcontractor',
+      "manager": clientData.manager || 'Unknown Manager',
+      "purpose": "Pickup Check",
+      "checkInTime": new Date().toISOString(),
+      "message": `Hi Loan, ${clientData.name} has come to pick up checks. Please prepare!`
     };
 
     const response = await fetch(webhookUrl, {

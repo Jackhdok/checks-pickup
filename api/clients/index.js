@@ -44,6 +44,39 @@ export default async function handler(req, res) {
         }
       });
 
+      // Send Teams notification - SIMPLE FORMAT
+      try {
+        const webhookUrl = process.env.REACT_APP_TEAMS_WEBHOOK_URL || 'https://default615878b3a96f4a16bf757f30b157ce.5a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4eba1566011241f3affa750bf6407657/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7PrTXGMC7pvRgZU34ALou31pEklvPnrlHteE5HHx0Wk';
+        
+        // Simple JSON payload for Power Automate
+        const message = {
+          "name": name,
+          "phone": phone,
+          "type": type === 'vendor' ? 'Vendor' : 'Subcontractor',
+          "manager": manager || 'Unknown Manager',
+          "purpose": "Pickup Check",
+          "checkInTime": new Date().toISOString(),
+          "message": `Hi Loan, ${name} has come to pick up checks. Please prepare!`
+        };
+
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(message)
+        });
+
+        console.log('Teams webhook response:', response.status);
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Webhook error details:', errorText);
+        }
+      } catch (webhookError) {
+        console.error('Teams webhook error:', webhookError);
+        // Continue even if webhook fails
+      }
+
       res.status(201).json(client);
     } else {
       res.setHeader('Allow', ['GET', 'POST']);

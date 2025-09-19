@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id            String       @id @default(cuid())
+  name          String
+  phone         String
+  type          ClientType
+  manager       String       @default("Anh Le")
+  status        ClientStatus @default(WAITING)
+  checkInTime   DateTime     @default(now())
+  calledTime    DateTime?
+  completedTime DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  purpose       String?      @default("pickup")
+
+  @@map("clients")
+}
+
+enum ClientType {
+  VENDOR
+  SUBCONTRACTOR
+}
+
+enum ClientStatus {
+  WAITING
+  CALLED
+  IN_PROGRESS
+  COMPLETED
+}
