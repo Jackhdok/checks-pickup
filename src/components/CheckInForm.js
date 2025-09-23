@@ -183,8 +183,9 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
           >
             <option value="">Select a manager</option>
             <option value="Anh Le">Anh Le</option>
-            <option value="Juanito">Juanito</option>
             <option value="Andy">Andy</option>
+            <option value="Juanito">Juanito</option>
+            <option value="Goat">Goat</option>
           </select>
           {errors.manager && <span className="error-message">{errors.manager}</span>}
         </div>
