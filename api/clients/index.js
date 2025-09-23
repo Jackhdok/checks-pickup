@@ -105,6 +105,17 @@ export default async function handler(req, res) {
                       "weight": "Bolder",
                       "color": "Good"
                     }
+                  ],
+                  "actions": [
+                    {
+                      "type": "Action.Submit",
+                      "title": "Mark as Called",
+                      "data": {
+                        "action": "cycle_status",
+                        "clientId": client.id,
+                        "currentStatus": "WAITING"
+                      }
+                    }
                   ]
                 }
               }
