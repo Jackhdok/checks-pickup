@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, User, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, Monitor } from 'lucide-react';
 import './AdminPage.css';
 
@@ -6,6 +6,35 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   // Removed unused tab state since we simplified to single view
+
+  // Handle URL parameters for adaptive card actions
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get('action');
+    const id = urlParams.get('id');
+    
+    if (action && id) {
+      const client = waitingList.find(c => c.id === id);
+      if (client) {
+        switch (action) {
+          case 'call':
+            onUpdateStatus(id, 'CALLED');
+            break;
+          case 'complete':
+            onUpdateStatus(id, 'COMPLETED');
+            break;
+          case 'remove':
+            onRemove(id);
+            break;
+          default:
+            // Unknown action, do nothing
+            break;
+        }
+        // Clear URL parameters after action
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  }, [waitingList, onUpdateStatus, onRemove]);
 
   const filteredList = waitingList.filter(client => {
     const matchesStatus = filterStatus === 'all' || client.status === filterStatus;

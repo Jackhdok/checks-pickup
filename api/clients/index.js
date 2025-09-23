@@ -108,13 +108,19 @@ export default async function handler(req, res) {
                   ],
                   "actions": [
                     {
-                      "type": "Action.Submit",
+                      "type": "Action.OpenUrl",
                       "title": "Mark as Called",
-                      "data": {
-                        "action": "cycle_status",
-                        "clientId": client.id,
-                        "currentStatus": "WAITING"
-                      }
+                      "url": `https://checks-pickup.vercel.app/admin?action=call&id=${client.id}`
+                    },
+                    {
+                      "type": "Action.OpenUrl", 
+                      "title": "Mark as Completed",
+                      "url": `https://checks-pickup.vercel.app/admin?action=complete&id=${client.id}`
+                    },
+                    {
+                      "type": "Action.OpenUrl",
+                      "title": "Remove from List", 
+                      "url": `https://checks-pickup.vercel.app/admin?action=remove&id=${client.id}`
                     }
                   ]
                 }
