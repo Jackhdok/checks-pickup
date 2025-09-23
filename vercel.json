@@ -2,12 +2,14 @@
   "version": 2,
   "buildCommand": "npm run vercel-build",
   "installCommand": "npm install",
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/static/(.*)", "headers": { "cache-control": "s-maxage=31536000,immutable" } },
     { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url"
-  }
+  ]
 }
