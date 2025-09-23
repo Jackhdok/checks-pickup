@@ -1,131 +1,76 @@
-# Database Setup Instructions
+# Database Setup Guide
 
-This application now uses a PostgreSQL database with Prisma ORM for data persistence.
+## 🚨 IMPORTANT: Your application needs a PostgreSQL database to work in production!
 
-## 1. Create Vercel Postgres Database
+Currently, your application is configured to use SQLite locally, but Vercel serverless functions require a cloud database.
 
-1. Go to your Vercel project dashboard
-2. Navigate to the **Storage** tab
-3. Click **Create Database**
-4. Select **PostgreSQL**
-5. Choose a region and database name
+## 🔧 Quick Fix - Set up Vercel Postgres
+
+### Step 1: Create Vercel Postgres Database
+1. Go to your Vercel project dashboard: https://vercel.com/jack-hds-projects/checks-pickup
+2. Click on the **Storage** tab
+3. Click **Create Database** → **Postgres**
+4. Choose a name (e.g., "checkin-db")
+5. Select a region close to you
 6. Click **Create**
 
-## 2. Connect Database to Project
+### Step 2: Get Connection String
+1. After creating the database, click on it
+2. Go to the **.env.local** tab
+3. Copy the `DATABASE_URL` value
 
-1. After creating the database, click **Connect Project**
-2. Select your existing Vercel project
-3. Click **Connect**
+### Step 3: Set Environment Variables in Vercel
+1. Go to your project **Settings** → **Environment Variables**
+2. Add these variables:
+   - `DATABASE_URL` = (paste the connection string from step 2)
+   - `REACT_APP_TEAMS_WEBHOOK_URL` = (your Teams webhook URL)
 
-## 3. Get Database Connection String
+### Step 4: Redeploy
+1. Go to **Deployments** tab
+2. Click **Redeploy** on the latest deployment
+3. Or push a new commit to trigger auto-deployment
 
-1. In your Vercel project dashboard, go to **Settings** > **Environment Variables**
-2. Find the `DATABASE_URL` variable
-3. Copy the connection string
+## 🛠️ Alternative: External Database Services
 
-## 4. Configure Local Environment
+If you prefer external services:
 
-1. Copy `env.example` to `.env` in your project root
-2. Replace the `DATABASE_URL` placeholder with your actual connection string from Vercel
+### Option A: Supabase (Free tier available)
+1. Go to https://supabase.com
+2. Create a new project
+3. Go to Settings → Database
+4. Copy the connection string
+5. Set as `DATABASE_URL` in Vercel
 
-## 5. Deploy Database Schema
+### Option B: PlanetScale (Free tier available)
+1. Go to https://planetscale.com
+2. Create a new database
+3. Get the connection string
+4. Set as `DATABASE_URL` in Vercel
 
-The database schema will be automatically deployed when you push to GitHub and Vercel redeploys your application.
+## 🧪 Testing the Fix
 
-## 6. Database Schema
+After setting up the database:
 
-The application uses the following database schema:
+1. **Test the API**: Visit `https://your-app.vercel.app/api/clients`
+2. **Test form submission**: Try submitting the check-in form
+3. **Check data persistence**: Refresh and see if data is saved
 
-```prisma
-model Manager {
-  id          String   @id @default(cuid())
-  name        String
-  email       String?  @unique
-  phone       String?
-  department  String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Relationships
-  clients     Client[]
+## 🔍 Troubleshooting
 
-  @@map("managers")
-}
+### If you still get errors:
+1. Check Vercel deployment logs
+2. Verify `DATABASE_URL` is set correctly
+3. Make sure the database is accessible
+4. Check if Prisma migrations ran successfully
 
-model Client {
-  id          String   @id @default(cuid())
-  name        String
-  phone       String
-  type        ClientType
-  managerId   String
-  purpose     String   @default("pickup")
-  status      ClientStatus @default(WAITING)
-  checkInTime DateTime @default(now())
-  calledTime  DateTime?
-  completedTime DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+### Common Issues:
+- **"Database not found"**: Database URL is incorrect
+- **"Connection timeout"**: Database is not accessible
+- **"Schema not found"**: Need to run `prisma db push`
 
-  // Relationships
-  manager     Manager  @relation(fields: [managerId], references: [id])
+## 📞 Need Help?
 
-  @@map("clients")
-}
-
-enum ClientType {
-  VENDOR
-  SUBCONTRACTOR
-}
-
-enum ClientStatus {
-  WAITING
-  CALLED
-  IN_PROGRESS
-  COMPLETED
-}
-```
-
-## 7. API Endpoints
-
-The application provides the following API endpoints:
-
-### Client Endpoints
-- `GET /api/clients` - Get all clients
-- `POST /api/clients` - Create a new client
-- `PUT /api/clients/[id]` - Update client status
-- `DELETE /api/clients/[id]` - Delete a client
-
-### Manager Endpoints
-- `GET /api/managers` - Get all managers
-- `POST /api/managers` - Create a new manager
-- `PUT /api/managers/[id]` - Update manager information
-- `DELETE /api/managers/[id]` - Delete a manager
-
-## 8. Local Development
-
-For local development, you can use the following commands:
-
-```bash
-# Generate Prisma client
-npm run db:generate
-
-# Push schema to database (for development)
-npm run db:push
-
-# Open Prisma Studio (database GUI)
-npm run db:studio
-```
-
-## 9. Production Deployment
-
-The application will automatically:
-1. Generate the Prisma client during build
-2. Create the database tables on first deployment
-3. Handle all database operations through the API routes
-
-## Troubleshooting
-
-- Make sure your `DATABASE_URL` environment variable is correctly set in Vercel
-- Check that the database is properly connected to your project
-- Verify that the Prisma client is generated during build
+If you're still having issues:
+1. Check the Vercel deployment logs
+2. Verify your environment variables
+3. Test the database connection manually
