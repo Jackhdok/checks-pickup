@@ -44,19 +44,70 @@ export default async function handler(req, res) {
         }
       });
 
-      // Send Teams notification
+      // Send Teams notification with Adaptive Card
       try {
-        const webhookUrl = process.env.REACT_APP_TEAMS_WEBHOOK_URL;
+        const webhookUrl = process.env.REACT_APP_TEAMS_WEBHOOK_URL || 'https://default615878b3a96f4a16bf757f30b157ce.5a.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4eba1566011241f3affa750bf6407657/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7PrTXGMC7pvRgZU34ALou31pEklvPnrlHteE5HHx0Wk';
         
         if (webhookUrl) {
-          const message = {
-            "name": name,
-            "phone": phone,
-            "type": type === 'vendor' ? 'Vendor' : 'Subcontractor',
-            "manager": manager || 'Unknown Manager',
-            "purpose": "Pickup Check",
-            "checkInTime": new Date().toISOString(),
-            "message": `Hi Loan, ${name} has come to pick up checks. Please prepare!`
+          const adaptiveCard = {
+            "type": "message",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "contentUrl": null,
+                "content": {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "type": "AdaptiveCard",
+                  "version": "1.3",
+                  "body": [
+                    {
+                      "type": "TextBlock",
+                      "text": "🔔 New Check-in Request",
+                      "weight": "Bolder",
+                      "size": "Medium",
+                      "color": "Accent"
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": `**Name:** ${name}`,
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": `**Phone:** ${phone}`,
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": `**Type:** ${type === 'vendor' ? 'Vendor' : 'Subcontractor'}`,
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": `**Manager:** ${manager || 'Unknown Manager'}`,
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": `**Purpose:** Pickup Check`,
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": `**Check-in Time:** ${new Date().toLocaleString()}`,
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "text": `Hi Loan, ${name} has come to pick up checks. Please prepare!`,
+                      "wrap": true,
+                      "weight": "Bolder",
+                      "color": "Good"
+                    }
+                  ]
+                }
+              }
+            ]
           };
 
           const response = await fetch(webhookUrl, {
@@ -64,10 +115,14 @@ export default async function handler(req, res) {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(message)
+            body: JSON.stringify(adaptiveCard)
           });
 
-          console.log('Teams webhook response:', response.status);
+          console.log('Teams adaptive card response:', response.status);
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Teams webhook error details:', errorText);
+          }
         }
       } catch (webhookError) {
         console.error('Teams webhook error:', webhookError);
