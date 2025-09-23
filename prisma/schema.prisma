@@ -27,6 +27,7 @@ model Client {
 enum ClientType {
   VENDOR
   SUBCONTRACTOR
+  SUBVENDOR
 }
 
 enum ClientStatus {
