@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       res.status(200).json(clients);
     } else if (req.method === 'POST') {
       // Create new client
-      const { name, phone, type, manager, purpose = 'pickup' } = req.body;
+      const { name, phone, type, manager, purpose = 'pickup', projects } = req.body;
       
       if (!name || !phone || !type || !manager) {
         return res.status(400).json({ error: 'Missing required fields: name, phone, type, manager' });
@@ -40,6 +40,7 @@ export default async function handler(req, res) {
           type: type.toLowerCase() === 'subcontractor' ? 'SUBCONTRACTOR' : 'VENDOR',
           manager,
           purpose,
+          projects,
           status: 'WAITING'
         }
       });
@@ -49,6 +50,66 @@ export default async function handler(req, res) {
         const webhookUrl = process.env.REACT_APP_TEAMS_WEBHOOK_URL;
         
         if (webhookUrl) {
+          // Build body array dynamically
+          const bodyArray = [
+            {
+              "type": "TextBlock",
+              "text": "🔔 New Check-in Request",
+              "weight": "Bolder",
+              "size": "Medium",
+              "color": "Accent"
+            },
+            {
+              "type": "TextBlock",
+              "text": `**Name:** ${name}`,
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": `**Phone:** ${phone}`,
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": `**Type:** ${type === 'vendor' ? 'Vendor' : 'Subcontractor'}`,
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": `**Manager:** ${manager || 'Unknown Manager'}`,
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": `**Purpose:** Pickup Check`,
+              "wrap": true
+            }
+          ];
+
+          // Add projects field if provided
+          if (projects) {
+            bodyArray.push({
+              "type": "TextBlock",
+              "text": `**Projects:** ${projects}`,
+              "wrap": true
+            });
+          }
+
+          bodyArray.push(
+            {
+              "type": "TextBlock",
+              "text": `**Check-in Time:** ${new Date().toLocaleString()}`,
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": `Hi Loan, ${name} has come to pick up checks. Please prepare!`,
+              "wrap": true,
+              "weight": "Bolder",
+              "color": "Good"
+            }
+          );
+
           // Format data according to Power Automate schema
           const automationData = {
             "type": "message",
@@ -60,52 +121,7 @@ export default async function handler(req, res) {
                   "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
                   "type": "AdaptiveCard",
                   "version": "1.3",
-                  "body": [
-                    {
-                      "type": "TextBlock",
-                      "text": "🔔 New Check-in Request",
-                      "weight": "Bolder",
-                      "size": "Medium",
-                      "color": "Accent"
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": `**Name:** ${name}`,
-                      "wrap": true
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": `**Phone:** ${phone}`,
-                      "wrap": true
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": `**Type:** ${type === 'vendor' ? 'Vendor' : 'Subcontractor'}`,
-                      "wrap": true
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": `**Manager:** ${manager || 'Unknown Manager'}`,
-                      "wrap": true
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": `**Purpose:** Pickup Check`,
-                      "wrap": true
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": `**Check-in Time:** ${new Date().toLocaleString()}`,
-                      "wrap": true
-                    },
-                    {
-                      "type": "TextBlock",
-                      "text": `Hi Loan, ${name} has come to pick up checks. Please prepare!`,
-                      "wrap": true,
-                      "weight": "Bolder",
-                      "color": "Good"
-                    }
-                  ],
+                  "body": bodyArray,
                   "actions": [
                     {
                       "type": "Action.OpenUrl",

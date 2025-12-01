@@ -20,6 +20,7 @@ model Client {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   purpose       String?      @default("pickup")
+  projects      String?
 
   @@map("clients")
 }

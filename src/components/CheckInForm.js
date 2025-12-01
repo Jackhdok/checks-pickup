@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Phone, Building2, Package, CheckCircle } from 'lucide-react';
+import { User, Phone, Building2, Package, CheckCircle, FolderOpen } from 'lucide-react';
 import './CheckInForm.css';
 
 const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
@@ -8,7 +8,8 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
     phone: '',
     type: '',
     manager: '',
-    purpose: 'pickup'
+    purpose: 'pickup',
+    projects: ''
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,7 +75,8 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
         phone: '',
         type: '',
         manager: '',
-        purpose: 'pickup'
+        purpose: 'pickup',
+        projects: ''
       });
       
       setShowSuccess(true);
@@ -199,6 +201,23 @@ const CheckInForm = ({ onAddToWaitingList, isLightMode }) => {
             <CheckCircle size={16} />
             <span>Pickup Check</span>
           </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="projects" className="form-label">
+            <FolderOpen size={20} />
+            What projects?
+          </label>
+          <input
+            type="text"
+            id="projects"
+            name="projects"
+            value={formData.projects}
+            onChange={handleInputChange}
+            className="form-input"
+            placeholder="Enter project names"
+            disabled={isSubmitting}
+          />
         </div>
 
         <button

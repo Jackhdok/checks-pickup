@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, User, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, Monitor } from 'lucide-react';
+import { Users, User, Phone, Building2, Package, Clock, CheckCircle, X, Megaphone, Monitor, FolderOpen } from 'lucide-react';
 import './AdminPage.css';
 
 const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLightMode, onBackToPublic, onOpenPublicCheckIn, onLogout }) => {
@@ -272,6 +272,14 @@ const AdminPage = ({ waitingList, onRemove, onUpdateStatus, onCallClient, isLigh
                         <span className="detail-label">Purpose:</span>
                         <span className="detail-value">Pickup Check</span>
                       </div>
+                      
+                      {client.projects && (
+                        <div className="detail-item">
+                          <FolderOpen size={14} />
+                          <span className="detail-label">Projects:</span>
+                          <span className="detail-value">{client.projects}</span>
+                        </div>
+                      )}
                       
                       <div className="detail-item">
                         <Clock size={14} />
